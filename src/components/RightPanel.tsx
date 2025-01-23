@@ -18,6 +18,9 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
       <div className="mt-4">
         {fields.map((field, index) => (
           <div key={index} className="mb-4">
+            <label className="block text-sm font-medium mb-2">
+              {field.label}
+            </label>
             {field.type === "text" && (
               <input type="text" placeholder={field.placeholder} />
             )}
