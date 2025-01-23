@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useState } from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
@@ -12,14 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-
-interface Field {
-  id: number;
-  type: string;
-  label: string;
-  placeholder: string;
-  required: boolean;
-}
+import { Field } from "@/types/types";
 
 interface LeftPanelProps {
   title: string;
@@ -35,7 +28,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   setFields,
 }) => {
   const [currentField, setCurrentField] = useState<Field>({
-    id: Date.now(),
+    id: Date.now().toString(),
     type: "text",
     label: "Nowe pole",
     placeholder: "Placeholder",
@@ -45,7 +38,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   const addField = () => {
     setFields([...fields, currentField]);
     setCurrentField({
-      id: Date.now(),
+      id: Date.now().toString(),
       type: "text",
       label: "Nowe pole",
       placeholder: "Placeholder",

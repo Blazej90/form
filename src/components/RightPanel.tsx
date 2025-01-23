@@ -1,8 +1,11 @@
 "use client";
 
+import React from "react";
+import { Field } from "@/types/types";
+
 interface RightPanelProps {
   title: string;
-  fields: any[];
+  fields: Field[];
 }
 
 export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
@@ -21,7 +24,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
             {field.type === "textarea" && (
               <textarea placeholder={field.placeholder} />
             )}
-            {field.type === "select" && (
+            {field.type === "select" && field.options && (
               <select>
                 {field.options.map((option: string, i: number) => (
                   <option key={i} value={option}>
