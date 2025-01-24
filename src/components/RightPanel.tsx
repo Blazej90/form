@@ -17,27 +17,55 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
 
       <div className="mt-4">
         {fields.map((field, index) => (
-          <div key={index} className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              {field.label}
-            </label>
+          <div key={index} className="mb-6">
+            {field.label && (
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">
+                  {field.label}{" "}
+                  {field.required && <span className="text-red-500">*</span>}
+                </label>
+              </div>
+            )}
             {field.type === "text" && (
-              <input type="text" placeholder={field.placeholder} />
+              <input
+                type="text"
+                placeholder={field.placeholder}
+                className="w-full border border-gray-300 p-2 rounded"
+              />
             )}
             {field.type === "textarea" && (
-              <textarea placeholder={field.placeholder} />
+              <textarea
+                placeholder={field.placeholder}
+                className="w-full border border-gray-300 p-2 rounded"
+              />
             )}
-            {field.type === "select" && field.options && (
-              <select>
-                {field.options.map((option: string, i: number) => (
+            {field.type === "select" && (
+              <select className="w-full border border-gray-300 p-2 rounded">
+                {field.options?.map((option, i) => (
                   <option key={i} value={option}>
                     {option}
                   </option>
                 ))}
               </select>
             )}
-            {field.type === "checkbox" && <input type="checkbox" />}
-            {field.type === "switch" && <input type="checkbox" />}
+            {field.type === "checkbox" && (
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 border border-gray-300 rounded"
+                />
+                <label className="ml-2 text-sm">Pole wyboru</label>
+              </div>
+            )}
+            {field.type === "switch" && (
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 border border-gray-300 rounded"
+                />
+                <label className="ml-2 text-sm">Przełącznik</label>
+              </div>
+            )}
           </div>
         ))}
       </div>

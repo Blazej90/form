@@ -37,10 +37,16 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   });
 
   const addField = () => {
-    setFields([...fields, currentField]);
+    const newField = {
+      ...currentField,
+      ...(currentField.type === "select" && {
+        options: ["Opcja 1", "Opcja 2", "Opcja 3"], 
+      }),
+    };
+    setFields([...fields, newField]);
     setCurrentField({
       id: Date.now().toString(),
-      type: "text",
+      type: "text", 
       label: "",
       placeholder: "",
       required: false,
