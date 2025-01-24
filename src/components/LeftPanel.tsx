@@ -32,7 +32,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     id: Date.now().toString(),
     type: "text",
     label: "",
-    placeholder: "Placeholder",
+    placeholder: "",
     required: false,
   });
 
@@ -41,8 +41,8 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     setCurrentField({
       id: Date.now().toString(),
       type: "text",
-      label: "Nowe pole",
-      placeholder: "Placeholder",
+      label: "",
+      placeholder: "",
       required: false,
     });
   };
