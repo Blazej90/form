@@ -31,7 +31,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   const [currentField, setCurrentField] = useState<Field>({
     id: Date.now().toString(),
     type: "text",
-    label: "Nowe pole",
+    label: "",
     placeholder: "Placeholder",
     required: false,
   });
