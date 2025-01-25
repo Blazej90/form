@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/select";
 import { Field } from "@/types/types";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 interface LeftPanelProps {
   title: string;
   setTitle: Dispatch<SetStateAction<string>>;
@@ -89,92 +91,94 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
         onChange={(e) => setTitle(e.target.value)}
         className="w-full mb-6"
       />
+      <ScrollArea className="max-h-[80vh] overflow-y-auto">
+        {" "}
+        {cards.map((cardId) => {
+          const field =
+            fields.find((field) => field.id === cardId) || ({} as Field);
 
-      {cards.map((cardId) => {
-        const field =
-          fields.find((field) => field.id === cardId) || ({} as Field);
-
-        return (
-          <Card key={cardId} className="mb-6">
-            <CardHeader>
-              <CardTitle>Karta ustawień pola</CardTitle>
-              <CardDescription>Konfiguracja pola formularza</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">
-                  Typ pola
-                </label>
-                <Select
-                  value={field.type}
-                  onValueChange={(value) =>
-                    updateField(cardId, { ...field, type: value })
-                  }
+          return (
+            <Card key={cardId} className="mb-6">
+              <CardHeader>
+                <CardTitle>Karta ustawień pola</CardTitle>
+                <CardDescription>Konfiguracja pola formularza</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <label className="block mb-2 text-sm font-medium">
+                    Typ pola
+                  </label>
+                  <Select
+                    value={field.type}
+                    onValueChange={(value) =>
+                      updateField(cardId, { ...field, type: value })
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Wybierz typ" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="text">Tekst</SelectItem>
+                      <SelectItem value="textarea">Pole tekstowe</SelectItem>
+                      <SelectItem value="select">Lista rozwijana</SelectItem>
+                      <SelectItem value="checkbox">Pole wyboru</SelectItem>
+                      <SelectItem value="switch">Przełącznik</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-sm font-medium">
+                    Etykieta pola
+                  </label>
+                  <Input
+                    value={field.label}
+                    onChange={(e) =>
+                      updateField(cardId, { ...field, label: e.target.value })
+                    }
+                    placeholder="Wprowadź nazwę pola"
+                    className="w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-sm font-medium">
+                    Tekst zastępczy
+                  </label>
+                  <Input
+                    value={field.placeholder}
+                    onChange={(e) =>
+                      updateField(cardId, {
+                        ...field,
+                        placeholder: e.target.value,
+                      })
+                    }
+                    placeholder="Nazwa dla Placeholder"
+                    className="w-full"
+                  />
+                </div>
+                <div className="flex items-center mb-4">
+                  <Switch
+                    checked={field.required}
+                    onCheckedChange={(checked) =>
+                      updateField(cardId, { ...field, required: checked })
+                    }
+                  />
+                  <label className="ml-2 text-sm font-medium">Wymagane</label>
+                </div>
+                <Button onClick={addCard} className="w-full">
+                  Dodaj kartę
+                </Button>
+                <Button
+                  onClick={() => removeCard(cardId)}
+                  variant="destructive"
+                  className="w-full"
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Wybierz typ" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="text">Tekst</SelectItem>
-                    <SelectItem value="textarea">Pole tekstowe</SelectItem>
-                    <SelectItem value="select">Lista rozwijana</SelectItem>
-                    <SelectItem value="checkbox">Pole wyboru</SelectItem>
-                    <SelectItem value="switch">Przełącznik</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">
-                  Etykieta pola
-                </label>
-                <Input
-                  value={field.label}
-                  onChange={(e) =>
-                    updateField(cardId, { ...field, label: e.target.value })
-                  }
-                  placeholder="Wprowadź nazwę pola"
-                  className="w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">
-                  Tekst zastępczy
-                </label>
-                <Input
-                  value={field.placeholder}
-                  onChange={(e) =>
-                    updateField(cardId, {
-                      ...field,
-                      placeholder: e.target.value,
-                    })
-                  }
-                  placeholder="Nazwa dla Placeholder"
-                  className="w-full"
-                />
-              </div>
-              <div className="flex items-center mb-4">
-                <Switch
-                  checked={field.required}
-                  onCheckedChange={(checked) =>
-                    updateField(cardId, { ...field, required: checked })
-                  }
-                />
-                <label className="ml-2 text-sm font-medium">Wymagane</label>
-              </div>
-              <Button onClick={addCard} className="w-full">
-                Dodaj kartę
-              </Button>
-              <Button
-                onClick={() => removeCard(cardId)}
-                variant="destructive"
-                className="w-full"
-              >
-                Usuń pole
-              </Button>
-            </CardContent>
-          </Card>
-        );
-      })}
+                  Usuń pole
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </ScrollArea>
     </div>
   );
 };
