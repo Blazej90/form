@@ -92,7 +92,10 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
         className="w-full mb-4"
       />
 
-      <Button onClick={addCard} className="mb-6 w-full">
+      <Button
+        onClick={addCard}
+        className="mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm font-semibold rounded-md transition-colors"
+      >
         Nowa karta
       </Button>
 
@@ -170,8 +173,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                 </div>
                 <Button
                   onClick={() => removeCard(cardId)}
-                  variant="destructive"
-                  className="w-full"
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-md transition-colors"
                 >
                   Usuń pole
                 </Button>
