@@ -89,10 +89,14 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
         placeholder="Wprowdź nazwę formularza"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full mb-6"
+        className="w-full mb-4"
       />
+
+      <Button onClick={addCard} className="mb-6 w-full">
+        Nowa karta
+      </Button>
+
       <ScrollArea className="max-h-[80vh] overflow-y-auto">
-        {" "}
         {cards.map((cardId) => {
           const field =
             fields.find((field) => field.id === cardId) || ({} as Field);
@@ -164,9 +168,6 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                   />
                   <label className="ml-2 text-sm font-medium">Wymagane</label>
                 </div>
-                <Button onClick={addCard} className="w-full">
-                  Dodaj kartę
-                </Button>
                 <Button
                   onClick={() => removeCard(cardId)}
                   variant="destructive"
