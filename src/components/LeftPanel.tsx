@@ -161,17 +161,8 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                 />
                 <label className="ml-2 text-sm font-medium">Wymagane</label>
               </div>
-              <Button
-                onClick={() =>
-                  setFields((prevFields) =>
-                    prevFields.some((f) => f.id === cardId)
-                      ? prevFields
-                      : [...prevFields, field]
-                  )
-                }
-                className="mb-4 w-full"
-              >
-                Zapisz pole
+              <Button onClick={addCard} className="w-full">
+                Dodaj kartę
               </Button>
               <Button
                 onClick={() => removeCard(cardId)}
@@ -179,9 +170,6 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                 className="w-full"
               >
                 Usuń pole
-              </Button>
-              <Button onClick={addCard} className="w-full">
-                Dodaj kartę
               </Button>
             </CardContent>
           </Card>
