@@ -11,64 +11,41 @@ interface RightPanelProps {
 export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
   return (
     <div className="w-1/2 p-6">
-      <h2 className="text-xl font-bold">
-        {title || "Wprowadź nazwę formularza..."}
-      </h2>
+      <h1 className="text-lg font-semibold">{title}</h1>
+      {fields.map((field) => {
+        if (!field.id) {
+          console.error("Rendering field with ID: undefined");
+          return null;
+        }
 
-      <div className="mt-4">
-        {fields.map((field) => (
-          <div key={field.id} className="mb-6">
-            {field.label && (
-              <div className="mb-4">
-                <label className="block mb-2 text-sm font-medium">
-                  {field.label}{" "}
-                  {field.required && <span className="text-red-500">*</span>}
-                </label>
-              </div>
-            )}
+        return (
+          <div key={field.id} className="mb-4">
+            <label className="block text-sm font-medium">
+              {field.label}
+              {field.required && <span className="text-red-500">*</span>}
+            </label>
+            {/* Renderowanie różnych typów pól */}
             {field.type === "text" && (
-              <input
-                type="text"
-                placeholder={field.placeholder}
-                className="w-full border border-gray-300 p-2 rounded"
-              />
+              <input type="text" placeholder={field.placeholder} />
             )}
             {field.type === "textarea" && (
-              <textarea
-                placeholder={field.placeholder}
-                className="w-full border border-gray-300 p-2 rounded"
-              />
+              <textarea placeholder={field.placeholder} />
             )}
             {field.type === "select" && (
-              <select className="w-full border border-gray-300 p-2 rounded">
-                {field.options?.map((option, i) => (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                ))}
+              <select>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
               </select>
             )}
             {field.type === "checkbox" && (
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 border border-gray-300 rounded"
-                />
-                <label className="ml-2 text-sm">Pole wyboru</label>
-              </div>
+              <input type="checkbox" checked={field.required} />
             )}
             {field.type === "switch" && (
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 border border-gray-300 rounded"
-                />
-                <label className="ml-2 text-sm">Przełącznik</label>
-              </div>
+              <input type="checkbox" checked={field.required} />
             )}
           </div>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 };

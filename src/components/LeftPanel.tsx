@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
@@ -40,30 +40,34 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   setActiveCard,
 }) => {
   const [cards, setCards] = useState<string[]>([]);
-  const [currentField, setCurrentField] = useState<Field>({
-    id: Date.now().toString(),
-    type: "text",
-    label: "",
-    placeholder: "",
-    required: false,
-  });
+
+  useEffect(() => {
+    if (cards.length === 0) {
+      addCard();
+    }
+  }, []);
 
   const addCard = () => {
     const newCardId = Date.now().toString();
-    setCards([...cards, newCardId]);
+    setCards((prevCards) => [...prevCards, newCardId]);
     setActiveCard(newCardId);
-    setCurrentField({
-      id: newCardId,
-      type: "text",
-      label: "",
-      placeholder: "",
-      required: false,
-    });
+    setFields((prevFields) => [
+      ...prevFields,
+      {
+        id: newCardId,
+        type: "text",
+        label: "",
+        placeholder: "",
+        required: false,
+      },
+    ]);
   };
 
   const removeCard = (cardId: string) => {
-    setCards(cards.filter((id) => id !== cardId));
-    setFields(fields.filter((field) => field.id !== cardId));
+    setCards((prevCards) => prevCards.filter((id) => id !== cardId));
+    setFields((prevFields) =>
+      prevFields.filter((field) => field.id !== cardId)
+    );
     if (activeCard === cardId) setActiveCard(null);
   };
 
@@ -80,25 +84,15 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
         <ModeToggle />
       </div>
       <Input
-        placeholder="My form"
+        placeholder="Wprowdź nazwę formularza"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className="w-full mb-6"
       />
-      <Button onClick={addCard} className="mb-6 w-full">
-        Dodaj kartę
-      </Button>
 
       {cards.map((cardId) => {
         const field =
-          fields.find((field) => field.id === cardId) ||
-          ({
-            id: cardId,
-            type: "text",
-            label: "",
-            placeholder: "",
-            required: false,
-          } as Field);
+          fields.find((field) => field.id === cardId) || ({} as Field);
 
         return (
           <Card key={cardId} className="mb-6">
@@ -138,7 +132,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                   onChange={(e) =>
                     updateField(cardId, { ...field, label: e.target.value })
                   }
-                  placeholder="Nowe pole"
+                  placeholder="Wprowadź nazwę pola"
                   className="w-full"
                 />
               </div>
@@ -154,7 +148,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                       placeholder: e.target.value,
                     })
                   }
-                  placeholder="Placeholder"
+                  placeholder="Nazwa dla Placeholder"
                   className="w-full"
                 />
               </div>
@@ -185,6 +179,9 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
                 className="w-full"
               >
                 Usuń pole
+              </Button>
+              <Button onClick={addCard} className="w-full">
+                Dodaj kartę
               </Button>
             </CardContent>
           </Card>
