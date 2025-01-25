@@ -4,16 +4,8 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/types/types";
 import {
   Card,
   CardContent,
@@ -21,12 +13,22 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Field } from "@/types/types";
 
 interface LeftPanelProps {
   title: string;
   setTitle: Dispatch<SetStateAction<string>>;
   fields: Field[];
   setFields: Dispatch<SetStateAction<Field[]>>;
+  activeCard: string | null;
+  setActiveCard: Dispatch<SetStateAction<string | null>>;
 }
 
 export const LeftPanel: React.FC<LeftPanelProps> = ({
@@ -34,7 +36,10 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   setTitle,
   fields,
   setFields,
+  activeCard,
+  setActiveCard,
 }) => {
+  const [cards, setCards] = useState<string[]>([]);
   const [currentField, setCurrentField] = useState<Field>({
     id: Date.now().toString(),
     type: "text",
@@ -43,16 +48,12 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     required: false,
   });
 
-  const addField = () => {
-    const newField = {
-      ...currentField,
-      ...(currentField.type === "select" && {
-        options: ["Opcja 1", "Opcja 2", "Opcja 3"],
-      }),
-    };
-    setFields([...fields, newField]);
+  const addCard = () => {
+    const newCardId = Date.now().toString();
+    setCards([...cards, newCardId]);
+    setActiveCard(newCardId);
     setCurrentField({
-      id: Date.now().toString(),
+      id: newCardId,
       type: "text",
       label: "",
       placeholder: "",
@@ -60,8 +61,16 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     });
   };
 
-  const removeField = () => {
-    setFields(fields.filter((field) => field.id !== currentField.id));
+  const removeCard = (cardId: string) => {
+    setCards(cards.filter((id) => id !== cardId));
+    setFields(fields.filter((field) => field.id !== cardId));
+    if (activeCard === cardId) setActiveCard(null);
+  };
+
+  const updateField = (cardId: string, updatedField: Field) => {
+    setFields((prevFields) =>
+      prevFields.map((field) => (field.id === cardId ? updatedField : field))
+    );
   };
 
   return (
@@ -76,84 +85,111 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
         onChange={(e) => setTitle(e.target.value)}
         className="w-full mb-6"
       />
-      <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Ustawienia pola</CardTitle>
-            <CardDescription>Konfiguracja pola formularza</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Typ pola</label>
-              <Select
-                value={currentField.type}
-                onValueChange={(value) =>
-                  setCurrentField({ ...currentField, type: value })
+      <Button onClick={addCard} className="mb-6 w-full">
+        Dodaj kartę
+      </Button>
+
+      {cards.map((cardId) => {
+        const field =
+          fields.find((field) => field.id === cardId) ||
+          ({
+            id: cardId,
+            type: "text",
+            label: "",
+            placeholder: "",
+            required: false,
+          } as Field);
+
+        return (
+          <Card key={cardId} className="mb-6">
+            <CardHeader>
+              <CardTitle>Karta ustawień pola</CardTitle>
+              <CardDescription>Konfiguracja pola formularza</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">
+                  Typ pola
+                </label>
+                <Select
+                  value={field.type}
+                  onValueChange={(value) =>
+                    updateField(cardId, { ...field, type: value })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Wybierz typ" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Tekst</SelectItem>
+                    <SelectItem value="textarea">Pole tekstowe</SelectItem>
+                    <SelectItem value="select">Lista rozwijana</SelectItem>
+                    <SelectItem value="checkbox">Pole wyboru</SelectItem>
+                    <SelectItem value="switch">Przełącznik</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">
+                  Etykieta pola
+                </label>
+                <Input
+                  value={field.label}
+                  onChange={(e) =>
+                    updateField(cardId, { ...field, label: e.target.value })
+                  }
+                  placeholder="Nowe pole"
+                  className="w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 text-sm font-medium">
+                  Tekst zastępczy
+                </label>
+                <Input
+                  value={field.placeholder}
+                  onChange={(e) =>
+                    updateField(cardId, {
+                      ...field,
+                      placeholder: e.target.value,
+                    })
+                  }
+                  placeholder="Placeholder"
+                  className="w-full"
+                />
+              </div>
+              <div className="flex items-center mb-4">
+                <Switch
+                  checked={field.required}
+                  onCheckedChange={(checked) =>
+                    updateField(cardId, { ...field, required: checked })
+                  }
+                />
+                <label className="ml-2 text-sm font-medium">Wymagane</label>
+              </div>
+              <Button
+                onClick={() =>
+                  setFields((prevFields) =>
+                    prevFields.some((f) => f.id === cardId)
+                      ? prevFields
+                      : [...prevFields, field]
+                  )
                 }
+                className="mb-4 w-full"
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Wybierz typ" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="text">Tekst</SelectItem>
-                  <SelectItem value="textarea">Pole tekstowe</SelectItem>
-                  <SelectItem value="select">Lista rozwijana</SelectItem>
-                  <SelectItem value="checkbox">Pole wyboru</SelectItem>
-                  <SelectItem value="switch">Przełącznik</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">
-                Etykieta pola
-              </label>
-              <Input
-                value={currentField.label}
-                onChange={(e) =>
-                  setCurrentField({ ...currentField, label: e.target.value })
-                }
-                placeholder="Nowe pole"
+                Zapisz pole
+              </Button>
+              <Button
+                onClick={() => removeCard(cardId)}
+                variant="destructive"
                 className="w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">
-                Tekst zastępczy
-              </label>
-              <Input
-                value={currentField.placeholder}
-                onChange={(e) =>
-                  setCurrentField({
-                    ...currentField,
-                    placeholder: e.target.value,
-                  })
-                }
-                placeholder="Placeholder"
-                className="w-full"
-              />
-            </div>
-            <div className="flex items-center mb-4">
-              <Switch
-                checked={currentField.required}
-                onCheckedChange={(checked) =>
-                  setCurrentField({ ...currentField, required: checked })
-                }
-              />
-              <label className="ml-2 text-sm font-medium">Wymagane</label>
-            </div>
-            <Button onClick={addField} className="mb-4 w-full">
-              Dodaj do formularza
-            </Button>
-            <Button
-              onClick={removeField}
-              variant="destructive"
-              className="w-full"
-            >
-              Usuń pole
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+              >
+                Usuń pole
+              </Button>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 };

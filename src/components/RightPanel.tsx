@@ -16,8 +16,8 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
       </h2>
 
       <div className="mt-4">
-        {fields.map((field, index) => (
-          <div key={index} className="mb-6">
+        {fields.map((field) => (
+          <div key={field.id} className="mb-6">
             {field.label && (
               <div className="mb-4">
                 <label className="block mb-2 text-sm font-medium">
