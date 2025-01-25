@@ -4,6 +4,17 @@ import React from "react";
 import { Field } from "@/types/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface RightPanelProps {
   title: string;
@@ -32,43 +43,41 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
                     {field.required && <span className="text-red-500">*</span>}
                   </label>
                   {field.type === "text" && (
-                    <input
+                    <Input
                       type="text"
                       placeholder={field.placeholder || ""}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full"
                     />
                   )}
                   {field.type === "textarea" && (
-                    <textarea
+                    <Textarea
                       placeholder={field.placeholder || ""}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full"
                     />
                   )}
                   {field.type === "select" && (
-                    <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option value="" disabled hidden>
-                        Wybierz opcję
-                      </option>
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                    </select>
+                    <Select onValueChange={(value) => console.log(value)}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Choose an option" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="option1">Option 1</SelectItem>
+                        <SelectItem value="option2">Option 2</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                   {field.type === "checkbox" && (
                     <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 text-blue-500"
-                      />
-                      <label className="text-sm">Opcja wyboru</label>
+                      <Checkbox id={field.id} />
+                      <label htmlFor={field.id} className="text-sm">
+                        {field.label}
+                      </label>
                     </div>
                   )}
                   {field.type === "switch" && (
                     <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-4 w-4 text-blue-500"
-                      />
-                      <label className="text-sm">Przełącznik</label>
+                      <Switch />
+                      <label className="text-sm">Toggle switch</label>
                     </div>
                   )}
                 </div>

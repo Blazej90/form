@@ -82,7 +82,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   return (
     <div className="w-1/2 p-6 border-r border-gray-300 dark:border-gray-700">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">Tytuł formularza</h1>
+        <h1 className="text-lg font-semibold">Kreator formularza</h1>
         <ModeToggle />
       </div>
       <Input
