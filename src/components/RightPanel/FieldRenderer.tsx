@@ -49,6 +49,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
           <SelectContent>
             <SelectItem value="option1">Option 1</SelectItem>
             <SelectItem value="option2">Option 2</SelectItem>
+            <SelectItem value="option3">Option 3</SelectItem>
           </SelectContent>
         </Select>
       )}
@@ -57,15 +58,17 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
         <div className="flex items-center space-x-2">
           <Checkbox id={field.id} />
           <label htmlFor={field.id} className="text-sm">
-            {field.label}
+            {field.placeholder || field.label}
           </label>
         </div>
       )}
 
       {field.type === "switch" && (
         <div className="flex items-center space-x-2">
-          <Switch />
-          <label className="text-sm">Toggle switch</label>
+          <Switch id={field.id} />
+          <label htmlFor={field.id} className="text-sm">
+            {field.placeholder || field.label}
+          </label>
         </div>
       )}
     </div>
