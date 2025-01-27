@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { LeftPanel } from "@/components/LeftPanel";
-import { RightPanel } from "@/components/RightPanel";
+import { LeftPanel } from "@/components/LeftPanel/LeftPanel";
+import { RightPanel } from "@/components/RightPanel/RightPanel";
 import { Field } from "@/types/types";
 
 export const Layout: React.FC = () => {
