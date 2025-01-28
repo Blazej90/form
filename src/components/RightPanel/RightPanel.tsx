@@ -6,7 +6,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { FormTitle } from "./FormTitle";
 import { FieldList } from "./RightFieldList";
 import { SubmitButton } from "./SubmitButton";
-import { DropZone } from "./DropZone";
+import { DropZoneComponent } from "./DropZone";
 
 interface RightPanelProps {
   title: string;
@@ -23,7 +23,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
         <CardContent>
           <form>
             <FieldList fields={fields} />
-            <DropZone />
+            <DropZoneComponent />
             <SubmitButton />
           </form>
         </CardContent>

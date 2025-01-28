@@ -1,30 +1,52 @@
-"use client";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { IconGallery } from "justd-icons";
 
-import React from "react";
-import { DropZone as DropPrimitiveZone, Label } from "react-aria-components";
-import { tv } from "tailwind-variants";
-
-const dropZoneStyles = tv({
-  base: "group flex max-h-[200px] max-w-xl flex-col items-center justify-center gap-2 rounded-md border border-dashed p-6 text-sm",
-  variants: {
-    isDropTarget: {
-      true: "border-primary border-solid bg-primary/10 ring-4 ring-primary/20",
-    },
-  },
-});
-
-export const DropZone: React.FC = () => {
-  return (
-    <DropPrimitiveZone
-      onDrop={(event) => {
-        const dragEvent = event as unknown as React.DragEvent;
-        const files = Array.from(dragEvent.dataTransfer.files);
-        console.log("Files dropped:", files);
-      }}
-      className={dropZoneStyles()}
-    >
-      <Label>Drop your files here</Label>
-      <p className="text-muted-foreground text-sm">Or click to select files</p>
-    </DropPrimitiveZone>
+export function DropZoneComponent() {
+  const [droppedImage, setDroppedImage] = useState<string | undefined>(
+    undefined
   );
-};
+
+  const onDrop = (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setDroppedImage(URL.createObjectURL(file));
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+    },
+    onDrop,
+  });
+
+  return (
+    <div
+      {...getRootProps()}
+      className="dropzone border-dashed border-2 p-4 rounded-lg flex flex-col items-center justify-center space-y-4"
+    >
+      {droppedImage ? (
+        <img
+          alt="Dropped file"
+          src={droppedImage}
+          className="aspect-square size-full object-contain rounded-md"
+        />
+      ) : (
+        <div className="grid space-y-3 text-center">
+          <div className="mx-auto grid size-12 place-content-center rounded-full border bg-secondary/70">
+            <IconGallery className="size-5" />
+          </div>
+          <div className="flex justify-center">
+            <input {...getInputProps()} />
+            <p>Upload a file</p>
+          </div>
+          <p className="text-sm text-gray-500">
+            Or drag and drop PNG, JPG files up to 10MB
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
