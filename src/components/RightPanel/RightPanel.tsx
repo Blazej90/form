@@ -11,9 +11,14 @@ import { DropZoneComponent } from "./DropZone";
 interface RightPanelProps {
   title: string;
   fields: Field[];
+  resetForm: () => void;
 }
 
-export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
+export const RightPanel: React.FC<RightPanelProps> = ({
+  title,
+  fields,
+  resetForm,
+}) => {
   return (
     <div className="w-1/2 p-6 overflow-y-auto">
       <Card className="shadow-md border border-gray-300 dark:border-gray-700">
@@ -24,7 +29,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({ title, fields }) => {
           <form>
             <FieldList fields={fields} />
             <DropZoneComponent />
-            <SubmitButton />
+            <SubmitButton resetForm={resetForm} />
           </form>
         </CardContent>
       </Card>
