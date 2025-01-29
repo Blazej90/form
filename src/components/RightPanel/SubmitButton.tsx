@@ -25,15 +25,15 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({ resetForm }) => {
   };
 
   return (
-    <div>
+    <div className="flex justify-center mt-6">
+      {" "}
       <Button
         type="button"
         onClick={handleSubmit}
-        className="mb-6 px-4 py-2 bg-purple-600 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-800 text-white text-sm font-semibold rounded-md transition-colors"
+        className="px-4 py-2 bg-purple-600 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-800 text-white text-sm font-semibold rounded-md transition-colors"
       >
         Submit
       </Button>
-
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
