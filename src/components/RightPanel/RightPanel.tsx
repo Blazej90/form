@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Field } from "@/types/types";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { FormTitle } from "./FormTitle";
@@ -19,6 +19,13 @@ export const RightPanel: React.FC<RightPanelProps> = ({
   fields,
   resetForm,
 }) => {
+  const [resetTrigger, setResetTrigger] = useState(0);
+
+  const handleReset = () => {
+    resetForm();
+    setResetTrigger((prev) => prev + 1);
+  };
+
   return (
     <div className="w-1/2 p-6 overflow-y-auto">
       <Card className="shadow-md border border-gray-300 dark:border-gray-700">
@@ -28,8 +35,8 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         <CardContent>
           <form>
             <FieldList fields={fields} />
-            <DropZoneComponent />
-            <SubmitButton resetForm={resetForm} />
+            <DropZoneComponent resetTrigger={resetTrigger} />
+            <SubmitButton resetForm={handleReset} />
           </form>
         </CardContent>
       </Card>
