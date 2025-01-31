@@ -30,7 +30,7 @@ export const LeftPanelHeader: React.FC<LeftPanelHeaderProps> = ({
         onClick={onAddCard}
         className="mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm font-semibold rounded-md transition-colors"
       >
-        Nowa karta
+        + Dodaj nowe pole
       </Button>
     </div>
   );

@@ -24,7 +24,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium mb-2">
         {field.label}
         {field.required && <span className="text-red-500">*</span>}
       </label>
