@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Field } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,19 @@ interface FieldRendererProps {
 }
 
 export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
+  const [checkboxLabels, setCheckboxLabels] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+  ]);
+
+  const handleCheckboxLabelChange = (index: number, value: string) => {
+    const updatedLabels = [...checkboxLabels];
+    updatedLabels[index] = value;
+    setCheckboxLabels(updatedLabels);
+  };
+
   if (!field.id) {
     console.error("Rendering field with ID: undefined");
     return null;
@@ -60,6 +73,25 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
           <label htmlFor={field.id} className="text-sm">
             {field.placeholder || field.label}
           </label>
+        </div>
+      )}
+
+      {field.type === "checkbox-group" && (
+        <div className="flex justify-between w-full space-x-4 mt-2">
+          {checkboxLabels.map((label, index) => (
+            <div key={index} className="flex items-center space-x-2 w-1/4">
+              <Checkbox id={`${field.id}-${index}`} />
+              <Input
+                type="text"
+                value={label}
+                onChange={(e) =>
+                  handleCheckboxLabelChange(index, e.target.value)
+                }
+                placeholder={`Nazwa ${index + 1}`}
+                className="w-full text-sm"
+              />
+            </div>
+          ))}
         </div>
       )}
 

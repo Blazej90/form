@@ -50,6 +50,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
               <SelectItem value="textarea">Pole tekstowe</SelectItem>
               <SelectItem value="select">Lista rozwijana</SelectItem>
               <SelectItem value="checkbox">Pole wyboru</SelectItem>
+              <SelectItem value="checkbox-group">Grupa pól wyboru</SelectItem>
               <SelectItem value="switch">Przełącznik</SelectItem>
             </SelectContent>
           </Select>
