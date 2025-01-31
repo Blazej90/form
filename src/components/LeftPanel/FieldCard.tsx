@@ -40,7 +40,20 @@ export const FieldCard: React.FC<FieldCardProps> = ({
           <label className="block mb-2 text-sm font-medium">Typ pola</label>
           <Select
             value={field.type}
-            onValueChange={(value) => onUpdateField({ ...field, type: value })}
+            onValueChange={(value) => {
+              if (
+                [
+                  "text",
+                  "textarea",
+                  "select",
+                  "checkbox",
+                  "checkbox-group",
+                  "switch",
+                ].includes(value)
+              ) {
+                onUpdateField({ ...field, type: value });
+              }
+            }}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Wybierz typ" />
@@ -55,6 +68,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
             </SelectContent>
           </Select>
         </div>
+
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium">
             Etykieta pola
@@ -66,6 +80,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
             className="w-full"
           />
         </div>
+
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium">
             Tekst zastępczy
@@ -79,6 +94,52 @@ export const FieldCard: React.FC<FieldCardProps> = ({
             className="w-full"
           />
         </div>
+
+        {field.type === "checkbox-group" && (
+          <div className="mb-4">
+            {Array.isArray(field.placeholder) &&
+            field.placeholder.length > 0 ? (
+              field.placeholder.map((option, index) => (
+                <div key={index} className="flex mb-2">
+                  <Input
+                    value={option}
+                    onChange={(e) => {
+                      const updatedOptions = [...field.placeholder];
+                      updatedOptions[index] = e.target.value;
+                      onUpdateField({ ...field, placeholder: updatedOptions });
+                    }}
+                    placeholder={`Nazwa checkbox ${index + 1}`}
+                    className="w-full"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const updatedOptions = [...field.placeholder];
+                      updatedOptions.splice(index, 1);
+                      onUpdateField({ ...field, placeholder: updatedOptions });
+                    }}
+                    className="ml-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md transition-colors"
+                  >
+                    Usuń
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="mt-4">Dodaj kolejny checkbox</div>
+            )}
+            <Button
+              type="button"
+              onClick={() => {
+                const updatedOptions = [...(field.placeholder || []), ""];
+                onUpdateField({ ...field, placeholder: updatedOptions });
+              }}
+              className="mt-4 mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm rounded-md transition-colors"
+            >
+              + Dodaj
+            </Button>
+          </div>
+        )}
+
         <div className="flex items-center mb-4">
           <Switch
             checked={field.required}
@@ -88,6 +149,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
           />
           <label className="ml-2 text-sm font-medium">Wymagane</label>
         </div>
+
         <Button
           onClick={onRemoveField}
           className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-md transition-colors"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Field } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,19 +17,6 @@ interface FieldRendererProps {
 }
 
 export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
-  const [checkboxLabels, setCheckboxLabels] = useState<string[]>([
-    "",
-    "",
-    "",
-    "",
-  ]);
-
-  const handleCheckboxLabelChange = (index: number, value: string) => {
-    const updatedLabels = [...checkboxLabels];
-    updatedLabels[index] = value;
-    setCheckboxLabels(updatedLabels);
-  };
-
   if (!field.id) {
     console.error("Rendering field with ID: undefined");
     return null;
@@ -45,13 +32,24 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
       {field.type === "text" && (
         <Input
           type="text"
-          placeholder={field.placeholder || ""}
+          placeholder={
+            Array.isArray(field.placeholder)
+              ? field.placeholder[0]
+              : field.placeholder
+          }
           className="w-full"
         />
       )}
 
       {field.type === "textarea" && (
-        <Textarea placeholder={field.placeholder || ""} className="w-full" />
+        <Textarea
+          placeholder={
+            Array.isArray(field.placeholder)
+              ? field.placeholder[0]
+              : field.placeholder
+          }
+          className="w-full"
+        />
       )}
 
       {field.type === "select" && (
@@ -78,23 +76,25 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
 
       {field.type === "checkbox-group" && (
         <div className="flex justify-between w-full space-x-4 mt-2">
-          {checkboxLabels.map((label, index) => (
-            <div key={index} className="flex items-center space-x-2 w-1/4">
-              <Checkbox id={`${field.id}-${index}`} />
-              <Input
-                type="text"
-                value={label}
-                onChange={(e) =>
-                  handleCheckboxLabelChange(index, e.target.value)
-                }
-                placeholder={`Nazwa ${index + 1}`}
-                className="w-full text-sm"
-              />
+          {Array.isArray(field.placeholder) ? (
+            field.placeholder.map((label, index) => (
+              <div key={index} className="flex items-center space-x-2 w-1/4">
+                <Checkbox id={`${field.id}-${index}`} />
+                <label htmlFor={`${field.id}-${index}`} className="text-sm">
+                  {label}
+                </label>
+              </div>
+            ))
+          ) : (
+            <div className="flex items-center space-x-2 w-full">
+              <Checkbox id={field.id} />
+              <label htmlFor={field.id} className="text-sm">
+                {field.placeholder}
+              </label>
             </div>
-          ))}
+          )}
         </div>
       )}
-
       {field.type === "switch" && (
         <div className="flex items-center space-x-2">
           <Switch id={field.id} />
