@@ -140,6 +140,51 @@ export const FieldCard: React.FC<FieldCardProps> = ({
           </div>
         )}
 
+        {field.type === "select" && (
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium">
+              Opcje listy rozwijanej
+            </label>
+            {(field.options ?? []).map((option, index) => (
+              <div key={index} className="flex mb-2">
+                <Input
+                  value={option}
+                  onChange={(e) => {
+                    const updatedOptions = [...(field.options ?? [])];
+                    updatedOptions[index] = e.target.value;
+                    onUpdateField({ ...field, options: updatedOptions });
+                  }}
+                  placeholder={`Opcja ${index + 1}`}
+                  className="w-full"
+                />
+                <Button
+                  type="button"
+                  onClick={() => {
+                    const updatedOptions = [...(field.options ?? [])];
+                    updatedOptions.splice(index, 1);
+                    onUpdateField({ ...field, options: updatedOptions });
+                  }}
+                  className="ml-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md transition-colors"
+                >
+                  Usuń
+                </Button>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              onClick={() => {
+                const updatedOptions = [...(field.options || [])];
+                updatedOptions.push("");
+                onUpdateField({ ...field, options: updatedOptions });
+              }}
+              className="mt-4 mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm rounded-md transition-colors"
+            >
+              + Dodaj
+            </Button>
+          </div>
+        )}
+
         <div className="flex items-center mb-4">
           <Switch
             checked={field.required}

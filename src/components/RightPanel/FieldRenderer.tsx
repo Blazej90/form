@@ -53,14 +53,18 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
       )}
 
       {field.type === "select" && (
-        <Select onValueChange={(value) => console.log(value)}>
+        <Select>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Choose an option" />
+            <SelectValue placeholder="Wybierz opcję" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="option1">Option 1</SelectItem>
-            <SelectItem value="option2">Option 2</SelectItem>
-            <SelectItem value="option3">Option 3</SelectItem>
+            {(field.options ?? [])
+              .filter((option) => option.trim() !== "")
+              .map((option, index) => (
+                <SelectItem key={index} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       )}
@@ -95,6 +99,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({ field }) => {
           )}
         </div>
       )}
+
       {field.type === "switch" && (
         <div className="flex items-center space-x-2">
           <Switch id={field.id} />
