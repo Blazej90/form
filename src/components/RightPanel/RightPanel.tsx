@@ -1,50 +1,3 @@
-// "use client";
-
-// import React, { useState } from "react";
-// import { Field } from "@/types/types";
-// import { Card, CardHeader, CardContent } from "@/components/ui/card";
-// import { FormTitle } from "./FormTitle";
-// import { FieldList } from "./RightFieldList";
-// import { SubmitButton } from "./SubmitButton";
-// import { DropZoneComponent } from "./DropZone";
-
-// interface RightPanelProps {
-//   title: string;
-//   fields: Field[];
-//   resetForm: () => void;
-// }
-
-// export const RightPanel: React.FC<RightPanelProps> = ({
-//   title,
-//   fields,
-//   resetForm,
-// }) => {
-//   const [resetTrigger, setResetTrigger] = useState(0);
-
-//   const handleReset = () => {
-//     resetForm();
-//     setResetTrigger((prev) => prev + 1);
-//   };
-
-//   return (
-//     <div className="w-1/2 p-6 overflow-y-auto">
-//       <Card className="shadow-md border border-gray-300 dark:border-gray-700">
-//         <CardHeader>
-//           <FormTitle title={title} />
-//         </CardHeader>
-//         <CardContent>
-//           <form>
-//             <FieldList fields={fields} />
-//             <DropZoneComponent resetTrigger={resetTrigger} />
-//             <SubmitButton resetForm={handleReset} />
-//           </form>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// };
-
-//2//
 "use client";
 
 import React, { useState } from "react";
@@ -70,7 +23,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
     [key: string]: string | string[];
   }>({});
   const [resetTrigger, setResetTrigger] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false); // ← Dodane
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   console.log("🔵 RightPanel render - isModalOpen:", isModalOpen);
 
@@ -87,6 +40,11 @@ export const RightPanel: React.FC<RightPanelProps> = ({
     setResetTrigger((prev) => prev + 1);
   };
 
+  const handleModalClose = () => {
+    setFormData({});
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="w-1/2 p-6 overflow-y-auto">
       <Card className="shadow-md border border-gray-300 dark:border-gray-700">
@@ -99,8 +57,8 @@ export const RightPanel: React.FC<RightPanelProps> = ({
             <DropZoneComponent resetTrigger={resetTrigger} />
             <SubmitButton
               formData={formData}
-              isOpen={isModalOpen}
-              setIsOpen={setIsModalOpen}
+              fields={fields}
+              onModalClose={handleModalClose}
             />
           </form>
         </CardContent>
