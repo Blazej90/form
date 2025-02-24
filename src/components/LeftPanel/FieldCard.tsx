@@ -46,7 +46,6 @@ export const FieldCard: React.FC<FieldCardProps> = ({
                   "text",
                   "textarea",
                   "select",
-                  "checkbox",
                   "checkbox-group",
                   "switch",
                 ].includes(value)
@@ -62,8 +61,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
               <SelectItem value="text">Tekst</SelectItem>
               <SelectItem value="textarea">Pole tekstowe</SelectItem>
               <SelectItem value="select">Lista rozwijana</SelectItem>
-              <SelectItem value="checkbox">Pole wyboru</SelectItem>
-              <SelectItem value="checkbox-group">Grupa pól wyboru</SelectItem>
+              <SelectItem value="checkbox-group">Pola wyboru</SelectItem>
               <SelectItem value="switch">Przełącznik</SelectItem>
             </SelectContent>
           </Select>
@@ -92,6 +90,11 @@ export const FieldCard: React.FC<FieldCardProps> = ({
             }
             placeholder="Nazwa dla Placeholder"
             className="w-full"
+            disabled={
+              field.type === "checkbox-group" ||
+              field.type === "select" ||
+              field.type === "switch"
+            }
           />
         </div>
 
