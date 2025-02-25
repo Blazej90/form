@@ -23,17 +23,20 @@ export const RightPanel: React.FC<RightPanelProps> = ({
     [key: string]: string | string[] | boolean;
   }>({});
   const [resetTrigger, setResetTrigger] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChange = (id: string, value: string | boolean | string[]) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleModalClose = () => {
+  const handleReset = () => {
     resetForm();
     setFormData({});
     setResetTrigger((prev) => prev + 1);
-    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setFormData({});
+    setResetTrigger((prev) => prev + 1);
   };
 
   return (
@@ -44,11 +47,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         </CardHeader>
         <CardContent>
           <form>
-            <FieldList
-              fields={fields}
-              formData={formData}
-              onChange={handleChange}
-            />
+            <FieldList fields={fields} onChange={handleChange} />
             <DropZoneComponent
               resetTrigger={resetTrigger}
               onFileDrop={(fileUrl, fileName) =>
