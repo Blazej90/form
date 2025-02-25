@@ -14,7 +14,7 @@ import {
 import { Field } from "@/types/types";
 
 interface SubmitButtonProps {
-  formData: { [key: string]: string | string[] };
+  formData: { [key: string]: string | string[] | boolean };
   fields: Field[];
   onModalClose: () => void;
 }
@@ -46,11 +46,28 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
             <p className="font-semibold">Dane z formularza:</p>
             <ul className="mt-2 space-y-1 text-sm">
               {Object.entries(formData).map(([key, value], index) => {
+                if (key === "droppedImage" && typeof value === "string") {
+                  return (
+                    <li key={index}>
+                      <strong>Plik:</strong>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <img
+                          src={value}
+                          alt="Dropped file"
+                          className="h-16 w-16 object-contain rounded-md"
+                        />
+                        {formData["droppedFileName"] && (
+                          <span>{formData["droppedFileName"] as string}</span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                }
                 const field = fields.find((f: Field) => f.id === key);
                 return (
                   <li key={index}>
                     <strong>{field?.label || key}:</strong>{" "}
-                    {Array.isArray(value) ? value.join(", ") : value}
+                    {Array.isArray(value) ? value.join(", ") : value.toString()}
                   </li>
                 );
               })}

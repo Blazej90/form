@@ -5,4 +5,5 @@ export interface Field {
   placeholder: string | string[];
   required: boolean;
   options?: string[];
+  selectedValues?: string[];
 }

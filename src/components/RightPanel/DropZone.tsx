@@ -4,9 +4,10 @@ import { IconGallery } from "justd-icons";
 
 interface DropZoneProps {
   resetTrigger: number;
+  onFileDrop?: (fileUrl: string, fileName: string) => void;
 }
 
-export function DropZoneComponent({ resetTrigger }: DropZoneProps) {
+export function DropZoneComponent({ resetTrigger, onFileDrop }: DropZoneProps) {
   const [droppedImage, setDroppedImage] = useState<string | undefined>(
     undefined
   );
@@ -14,7 +15,11 @@ export function DropZoneComponent({ resetTrigger }: DropZoneProps) {
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
-      setDroppedImage(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setDroppedImage(url);
+      if (onFileDrop) {
+        onFileDrop(url, file.name);
+      }
     }
   };
 
@@ -40,12 +45,12 @@ export function DropZoneComponent({ resetTrigger }: DropZoneProps) {
           <img
             alt="Dropped file"
             src={droppedImage}
-            className="aspect-square size-full object-contain rounded-md"
+            className="aspect-square h-64 w-64 object-contain rounded-md"
           />
         ) : (
           <div className="grid space-y-3 text-center">
-            <div className="mx-auto grid size-12 place-content-center rounded-full border bg-secondary/70">
-              <IconGallery className="size-5" />
+            <div className="mx-auto grid h-12 w-12 place-content-center rounded-full border bg-secondary/70">
+              <IconGallery className="h-5 w-5" />
             </div>
             <div className="flex justify-center">
               <input {...getInputProps()} />

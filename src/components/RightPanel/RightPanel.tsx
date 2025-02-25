@@ -54,7 +54,16 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         <CardContent>
           <form>
             <FieldList fields={fields} onChange={handleChange} />
-            <DropZoneComponent resetTrigger={resetTrigger} />
+            <DropZoneComponent
+              resetTrigger={resetTrigger}
+              onFileDrop={(fileUrl, fileName) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  droppedImage: fileUrl,
+                  droppedFileName: fileName,
+                }))
+              }
+            />
             <SubmitButton
               formData={formData}
               fields={fields}
