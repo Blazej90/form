@@ -28,13 +28,8 @@ export const RightPanel: React.FC<RightPanelProps> = ({
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleReset = () => {
-    resetForm();
-    setFormData({});
-    setResetTrigger((prev) => prev + 1);
-  };
-
   const handleModalClose = () => {
+    resetForm();
     setFormData({});
     setResetTrigger((prev) => prev + 1);
   };
