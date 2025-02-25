@@ -20,28 +20,19 @@ export const RightPanel: React.FC<RightPanelProps> = ({
   resetForm,
 }) => {
   const [formData, setFormData] = useState<{
-    [key: string]: string | string[];
+    [key: string]: string | string[] | boolean;
   }>({});
   const [resetTrigger, setResetTrigger] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log("🔵 RightPanel render - isModalOpen:", isModalOpen);
-
-  const handleChange = (id: string, value: string | boolean) => {
-    setFormData((prev) => {
-      const newValue = typeof value === "boolean" ? String(value) : value;
-      return { ...prev, [id]: newValue };
-    });
-  };
-
-  const handleReset = () => {
-    resetForm();
-    setFormData({});
-    setResetTrigger((prev) => prev + 1);
+  const handleChange = (id: string, value: string | boolean | string[]) => {
+    setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleModalClose = () => {
+    resetForm();
     setFormData({});
+    setResetTrigger((prev) => prev + 1);
     setIsModalOpen(false);
   };
 
@@ -53,7 +44,11 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         </CardHeader>
         <CardContent>
           <form>
-            <FieldList fields={fields} onChange={handleChange} />
+            <FieldList
+              fields={fields}
+              formData={formData}
+              onChange={handleChange}
+            />
             <DropZoneComponent
               resetTrigger={resetTrigger}
               onFileDrop={(fileUrl, fileName) =>

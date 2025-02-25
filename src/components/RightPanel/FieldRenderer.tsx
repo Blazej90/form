@@ -14,12 +14,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 interface FieldRendererProps {
   field: Field;
-  onChange: (id: string, value: string | boolean) => void;
+  onChange: (id: string, value: string | boolean | string[]) => void;
+  value: string | boolean | string[];
 }
 
 export const FieldRenderer: React.FC<FieldRendererProps> = ({
   field,
   onChange,
+  value,
 }) => {
   if (!field.id) {
     console.error("Rendering field with ID: undefined");
@@ -36,72 +38,74 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       {field.type === "text" && (
         <Input
           type="text"
-          placeholder={
-            Array.isArray(field.placeholder)
-              ? field.placeholder[0]
-              : field.placeholder
-          }
+          placeholder={field.placeholder as string}
           className="w-full"
+          value={(value as string) || ""}
           onChange={(e) => onChange(field.id, e.target.value)}
         />
       )}
 
       {field.type === "textarea" && (
         <Textarea
-          placeholder={
-            Array.isArray(field.placeholder)
-              ? field.placeholder[0]
-              : field.placeholder
-          }
+          placeholder={field.placeholder as string}
           className="w-full"
+          value={(value as string) || ""}
           onChange={(e) => onChange(field.id, e.target.value)}
         />
       )}
 
       {field.type === "select" && (
-        <Select onValueChange={(value) => onChange(field.id, value)}>
+        <Select
+          value={(value as string) || ""}
+          onValueChange={(val) => onChange(field.id, val)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Wybierz opcję" />
           </SelectTrigger>
           <SelectContent>
-            {(field.options ?? [])
-              .filter((option) => option.trim() !== "")
-              .map((option, index) => (
-                <SelectItem key={index} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
+            {(field.options ?? []).map((option, index) => (
+              <SelectItem key={index} value={option}>
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       )}
 
       {field.type === "checkbox-group" && (
         <div className="flex flex-wrap gap-2 mt-2">
-          {Array.isArray(field.placeholder) ? (
-            field.placeholder.map((label, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`${field.id}-${index}`}
-                  onCheckedChange={(checked) =>
-                    onChange(`${field.id}-${index}`, checked)
-                  }
-                />
-                <label htmlFor={`${field.id}-${index}`} className="text-sm">
-                  {label}
-                </label>
-              </div>
-            ))
-          ) : (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={field.id}
-                onCheckedChange={(checked) => onChange(field.id, checked)}
-              />
-              <label htmlFor={field.id} className="text-sm">
-                {field.placeholder}
-              </label>
-            </div>
-          )}
+          {Array.isArray(field.placeholder) &&
+            field.placeholder.map((label, index) => {
+              const isChecked =
+                Array.isArray(value) && (value as string[]).includes(label);
+              return (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`${field.id}-${index}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) => {
+                      let updatedValues: string[] = [];
+                      if (Array.isArray(value)) {
+                        updatedValues = [...(value as string[])];
+                      }
+                      if (checked) {
+                        if (!updatedValues.includes(label)) {
+                          updatedValues.push(label);
+                        }
+                      } else {
+                        updatedValues = updatedValues.filter(
+                          (v) => v !== label
+                        );
+                      }
+                      onChange(field.id, updatedValues);
+                    }}
+                  />
+                  <label htmlFor={`${field.id}-${index}`} className="text-sm">
+                    {label}
+                  </label>
+                </div>
+              );
+            })}
         </div>
       )}
 
@@ -109,6 +113,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
         <div className="flex items-center space-x-2">
           <Switch
             id={field.id}
+            checked={value as boolean}
             onCheckedChange={(checked) => onChange(field.id, checked)}
           />
           <label htmlFor={field.id} className="text-sm">
