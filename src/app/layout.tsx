@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import Modal from "react-modal";
 import { LeftPanel } from "@/components/LeftPanel/LeftPanel";
 import { RightPanel } from "@/components/RightPanel/RightPanel";
