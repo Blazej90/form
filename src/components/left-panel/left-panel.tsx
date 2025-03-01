@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LeftPanelHeader } from "./LeftPanelHeader";
-import { FieldList } from "./LeftFieldList";
+import { LeftPanelHeader } from "./left-panel-header";
+import { FieldList } from "./left-field-list";
 import { Field } from "@/types/types";
 
 interface LeftPanelProps {

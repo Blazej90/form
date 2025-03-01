@@ -1,6 +1,6 @@
 import React from "react";
 import { Field } from "@/types/types";
-import { FieldCard } from "./FieldCard";
+import { FieldCard } from "./field-card";
 
 interface FieldListProps {
   fields: Field[];

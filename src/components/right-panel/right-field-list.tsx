@@ -1,6 +1,6 @@
 import React from "react";
 import { Field } from "@/types/types";
-import { FieldRenderer } from "./FieldRenderer";
+import { FieldRenderer } from "./field-renderer";
 
 interface FieldListProps {
   fields: Field[];

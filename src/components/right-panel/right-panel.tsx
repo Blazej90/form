@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { Field } from "@/types/types";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { FormTitle } from "./FormTitle";
-import { FieldList } from "./RightFieldList";
-import { SubmitButton } from "./SubmitButton";
-import { DropZoneComponent } from "./DropZone";
+import { FormTitle } from "./form-title";
+import { FieldList } from "./right-field-list";
+import { SubmitButton } from "./submit-button";
+import { DropZoneComponent } from "./drop-zone";
 
 interface RightPanelProps {
   title: string;

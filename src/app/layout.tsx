@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Modal from "react-modal";
-import { LeftPanel } from "@/components/LeftPanel/LeftPanel";
-import { RightPanel } from "@/components/RightPanel/RightPanel";
+import { LeftPanel } from "@/components/left-panel/left-panel";
+import { RightPanel } from "@/components/right-panel/right-panel";
 import { Field } from "@/types/types";
 import "./globals.css";
 
