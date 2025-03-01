@@ -17,12 +17,14 @@ interface SubmitButtonProps {
   formData: { [key: string]: string | string[] | boolean };
   fields: Field[];
   onModalClose: () => void;
+  onResetForm: () => void;
 }
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({
   formData,
   fields,
   onModalClose,
+  onResetForm,
 }) => {
   return (
     <div className="flex justify-center mt-6">
@@ -46,6 +48,8 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
             <p className="font-semibold">Dane z formularza:</p>
             <ul className="mt-2 space-y-1 text-sm">
               {Object.entries(formData).map(([key, value], index) => {
+                const field = fields.find((f: Field) => f.id === key);
+
                 if (key === "droppedImage" && typeof value === "string") {
                   return (
                     <li key={index}>
@@ -63,11 +67,35 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
                     </li>
                   );
                 }
-                const field = fields.find((f: Field) => f.id === key);
+
+                if (field?.type === "checkbox-group") {
+                  const selectedValues =
+                    Array.isArray(value) && field.placeholder
+                      ? value
+                          .filter((selectedValue) =>
+                            field.placeholder.includes(selectedValue)
+                          )
+                          .join(", ")
+                      : "";
+
+                  return (
+                    <li key={index}>
+                      <strong>{field.label}:</strong>{" "}
+                      {selectedValues || "Brak wyboru"}
+                    </li>
+                  );
+                }
+
                 return (
                   <li key={index}>
                     <strong>{field?.label || key}:</strong>{" "}
-                    {Array.isArray(value) ? value.join(", ") : value.toString()}
+                    {typeof value === "boolean"
+                      ? value
+                        ? "Tak"
+                        : "Nie"
+                      : Array.isArray(value)
+                        ? value.join(", ")
+                        : value}
                   </li>
                 );
               })}
@@ -75,7 +103,14 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Anuluj</AlertDialogCancel>
-            <AlertDialogAction onClick={onModalClose}>OK</AlertDialogAction>
+            <AlertDialogAction
+              onClick={() => {
+                onResetForm();
+                onModalClose();
+              }}
+            >
+              OK
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

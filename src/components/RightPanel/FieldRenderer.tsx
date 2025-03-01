@@ -15,11 +15,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface FieldRendererProps {
   field: Field;
   onChange: (id: string, value: string | boolean | string[]) => void;
+  value: string | boolean | string[];
 }
 
 export const FieldRenderer: React.FC<FieldRendererProps> = ({
   field,
   onChange,
+  value,
 }) => {
   if (!field.id) {
     console.error("Rendering field with ID: undefined");
@@ -36,6 +38,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       {field.type === "text" && (
         <Input
           type="text"
+          value={typeof value === "string" ? value : ""}
           placeholder={
             Array.isArray(field.placeholder)
               ? field.placeholder[0]
@@ -48,6 +51,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
 
       {field.type === "textarea" && (
         <Textarea
+          value={typeof value === "string" ? value : ""}
           placeholder={
             Array.isArray(field.placeholder)
               ? field.placeholder[0]
@@ -59,7 +63,10 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       )}
 
       {field.type === "select" && (
-        <Select onValueChange={(value) => onChange(field.id, value)}>
+        <Select
+          value={typeof value === "string" ? value : ""}
+          onValueChange={(val) => onChange(field.id, val)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Wybierz opcję" />
           </SelectTrigger>
@@ -78,19 +85,31 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       {field.type === "checkbox-group" && (
         <div className="flex flex-wrap gap-2 mt-2">
           {Array.isArray(field.placeholder) &&
-            field.placeholder.map((label, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`${field.id}-${index}`}
-                  onCheckedChange={(checked) =>
-                    onChange(`${field.id}-${index}`, checked)
-                  }
-                />
-                <label htmlFor={`${field.id}-${index}`} className="text-sm">
-                  {label}
-                </label>
-              </div>
-            ))}
+            field.placeholder.map((label, index) => {
+              const isChecked = Array.isArray(value) && value.includes(label);
+              return (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`${field.id}-${index}`}
+                    checked={isChecked}
+                    onCheckedChange={(checked) => {
+                      const updatedValues = Array.isArray(value)
+                        ? checked
+                          ? [...value, label]
+                          : value.filter((val: string) => val !== label)
+                        : checked
+                          ? [label]
+                          : [];
+
+                      onChange(field.id, updatedValues);
+                    }}
+                  />
+                  <label htmlFor={`${field.id}-${index}`} className="text-sm">
+                    {label}
+                  </label>
+                </div>
+              );
+            })}
         </div>
       )}
 
@@ -98,6 +117,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
         <div className="flex items-center space-x-2">
           <Switch
             id={field.id}
+            checked={typeof value === "boolean" ? value : false}
             onCheckedChange={(checked) => onChange(field.id, checked)}
           />
           <label htmlFor={field.id} className="text-sm">
