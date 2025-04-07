@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LeftPanel } from "@/components/left-panel/left-panel";
 import { RightPanel } from "@/components/right-panel/right-panel";
+import { RotateHint } from "@/components/ui/rotate-hint";
 import { Field } from "@/types/types";
 
 export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
@@ -34,7 +35,11 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
       disableTransitionOnChange
     >
       <div id="__next">
-        <div className="flex h-screen">
+        <div className="md:hidden">
+          <RotateHint />
+        </div>
+
+        <div className="hidden md:flex h-screen">
           <LeftPanel
             title={title}
             setTitle={setTitle}
