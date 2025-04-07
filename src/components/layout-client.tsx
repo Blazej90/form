@@ -14,6 +14,7 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
   const [title, setTitle] = useState<string>("");
   const [fields, setFields] = useState<Field[]>([]);
   const [activeCard, setActiveCard] = useState<string | null>(null);
+  const [isPortrait, setIsPortrait] = useState<boolean>(true);
 
   const resetForm = () => {
     setFields([]);
@@ -24,6 +25,20 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (typeof window !== "undefined") {
       Modal.setAppElement("#__next");
+
+      const handleOrientation = () => {
+        setIsPortrait(window.innerHeight > window.innerWidth);
+      };
+
+      handleOrientation();
+
+      window.addEventListener("resize", handleOrientation);
+      window.addEventListener("orientationchange", handleOrientation);
+
+      return () => {
+        window.removeEventListener("resize", handleOrientation);
+        window.removeEventListener("orientationchange", handleOrientation);
+      };
     }
   }, []);
 
@@ -35,21 +50,21 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
       disableTransitionOnChange
     >
       <div id="__next">
-        <div className="md:hidden">
+        {isPortrait ? (
           <RotateHint />
-        </div>
-
-        <div className="hidden md:flex h-screen">
-          <LeftPanel
-            title={title}
-            setTitle={setTitle}
-            fields={fields}
-            setFields={setFields}
-            activeCard={activeCard}
-            setActiveCard={setActiveCard}
-          />
-          <RightPanel title={title} fields={fields} resetForm={resetForm} />
-        </div>
+        ) : (
+          <div className="flex h-screen">
+            <LeftPanel
+              title={title}
+              setTitle={setTitle}
+              fields={fields}
+              setFields={setFields}
+              activeCard={activeCard}
+              setActiveCard={setActiveCard}
+            />
+            <RightPanel title={title} fields={fields} resetForm={resetForm} />
+          </div>
+        )}
       </div>
     </ThemeProvider>
   );
