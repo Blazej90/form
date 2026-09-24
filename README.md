@@ -65,6 +65,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. The dev ser
 pnpm build   # Create a production build
 pnpm start   # Start the production server
 pnpm lint    # Run ESLint
+pnpm test    # Run unit tests (Vitest)
 ```
 
 ## Project Structure
