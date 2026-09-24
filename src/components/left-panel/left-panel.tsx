@@ -60,7 +60,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   };
 
   return (
-    <div className="w-1/2 p-6 border-r border-gray-300 dark:border-gray-700">
+    <div className="w-1/2 p-6 border-r border-border bg-card/40 backdrop-blur-sm">
       <LeftPanelHeader title={title} setTitle={setTitle} onAddCard={addCard} />
       <ScrollArea className="max-h-[80vh] overflow-y-auto">
         <LeftFieldList

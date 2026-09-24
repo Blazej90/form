@@ -55,7 +55,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
 
   return (
     <div className="w-1/2 p-6 overflow-y-auto">
-      <Card className="shadow-md border border-gray-300 dark:border-gray-700">
+      <Card className="rounded-xl border-border/60 shadow-lg">
         <CardHeader>
           <FormTitle title={title} />
         </CardHeader>

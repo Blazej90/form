@@ -49,7 +49,7 @@ export function DropZoneComponent({ resetTrigger, onFileDrop }: DropZoneProps) {
     <div className="flex flex-col items-center space-y-4">
       <div
         {...getRootProps()}
-        className="dropzone border-dashed border-2 p-4 rounded-lg flex flex-col items-center justify-center space-y-4"
+        className="dropzone w-full cursor-pointer rounded-xl border-2 border-dashed border-border p-6 flex flex-col items-center justify-center space-y-4 transition-colors hover:border-primary/60 hover:bg-accent/50"
       >
         <input {...getInputProps()} />
         {droppedImage ? (
@@ -61,11 +61,11 @@ export function DropZoneComponent({ resetTrigger, onFileDrop }: DropZoneProps) {
           />
         ) : (
           <div className="grid space-y-3 text-center">
-            <div className="mx-auto grid h-12 w-12 place-content-center rounded-full border bg-secondary/70">
+            <div className="mx-auto grid h-12 w-12 place-content-center rounded-full border bg-accent text-accent-foreground">
               <ImageUp className="h-5 w-5" />
             </div>
-            <p>{t("dropZone.upload")}</p>
-            <p className="text-sm text-gray-500">{t("dropZone.hint")}</p>
+            <p className="font-medium">{t("dropZone.upload")}</p>
+            <p className="text-sm text-muted-foreground">{t("dropZone.hint")}</p>
           </div>
         )}
       </div>

@@ -61,7 +61,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
       : "fieldCard.checkboxOptionPlaceholder";
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 rounded-xl shadow-sm transition-shadow hover:shadow-md">
       <CardHeader>
         <CardTitle>{t("fieldCard.title")}</CardTitle>
         <CardDescription>{t("fieldCard.description")}</CardDescription>
