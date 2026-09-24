@@ -2,7 +2,7 @@ export const en = {
   header: {
     appTitle: "Form Builder",
     formNamePlaceholder: "Enter form name",
-    addField: "+ Add new field",
+    addField: "Add new field",
   },
   fieldCard: {
     title: "Field settings card",

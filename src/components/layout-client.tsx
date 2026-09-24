@@ -52,7 +52,7 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
         {!mounted ? null : isPortrait ? (
           <RotateHint />
         ) : (
-          <div className="flex h-screen bg-gradient-to-br from-violet-50 via-background to-indigo-50 dark:from-violet-950/40 dark:via-background dark:to-indigo-950/40">
+          <div className="flex h-screen bg-gradient-to-br from-lime-50 via-background to-emerald-50 dark:from-lime-950/25 dark:via-background dark:to-emerald-950/25">
             <LeftPanel
               title={title}
               setTitle={setTitle}

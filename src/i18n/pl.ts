@@ -4,7 +4,7 @@ export const pl: Translations = {
   header: {
     appTitle: "Kreator formularza",
     formNamePlaceholder: "Wprowadź nazwę formularza",
-    addField: "+ Dodaj nowe pole",
+    addField: "Dodaj nowe pole",
   },
   fieldCard: {
     title: "Karta ustawień pola",

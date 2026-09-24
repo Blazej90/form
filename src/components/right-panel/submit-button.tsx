@@ -40,7 +40,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
       <Button
         type="button"
         onClick={onSubmit}
-        className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md transition-all hover:from-violet-700 hover:to-indigo-700 hover:shadow-lg"
+        className="bg-gradient-to-r from-lime-400 to-emerald-500 text-zinc-950 font-semibold shadow-md transition-all hover:from-lime-500 hover:to-emerald-600 hover:shadow-lg"
       >
         <Send className="mr-2 h-4 w-4" />
         {t("preview.submit")}
