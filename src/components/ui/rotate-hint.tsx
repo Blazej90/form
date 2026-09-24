@@ -2,12 +2,14 @@
 
 import { Smartphone } from "lucide-react";
 import { motion } from "framer-motion";
-import React from "react";
+import { useTranslation } from "@/i18n/language-provider";
 
 export const RotateHint = () => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white px-6 text-center sm:hidden"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white px-6 text-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -26,9 +28,9 @@ export const RotateHint = () => {
         <Smartphone className="h-10 w-10" />
       </motion.div>
       <p className="text-lg font-semibold">
-        Obróć ekran poziomo
+        {t("rotateHint.line1")}
         <br />
-        aby wygodnie korzystać z kreatora formularza.
+        {t("rotateHint.line2")}
       </p>
     </motion.div>
   );

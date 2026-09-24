@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { LanguageToggle } from "@/components/ui/language-toggle";
+import { useTranslation } from "@/i18n/language-provider";
 
 interface LeftPanelHeaderProps {
   title: string;
@@ -14,23 +18,25 @@ export const LeftPanelHeader: React.FC<LeftPanelHeaderProps> = ({
   setTitle,
   onAddCard,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-lg font-semibold">Kreator formularza</h1>
-        <ModeToggle />
+        <h1 className="text-lg font-semibold">{t("header.appTitle")}</h1>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <ModeToggle />
+        </div>
       </div>
       <Input
-        placeholder="Wprowdź nazwę formularza"
+        placeholder={t("header.formNamePlaceholder")}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className="w-full mb-4"
       />
-      <Button
-        onClick={onAddCard}
-        className="mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm font-semibold rounded-md transition-colors"
-      >
-        + Dodaj nowe pole
+      <Button onClick={onAddCard} className="mb-6">
+        {t("header.addField")}
       </Button>
     </div>
   );

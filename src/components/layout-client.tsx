@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/i18n/language-provider";
 import { LeftPanel } from "@/components/left-panel/left-panel";
 import { RightPanel } from "@/components/right-panel/right-panel";
 import { RotateHint } from "@/components/ui/rotate-hint";
@@ -14,7 +14,8 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
   const [title, setTitle] = useState<string>("");
   const [fields, setFields] = useState<Field[]>([]);
   const [activeCard, setActiveCard] = useState<string | null>(null);
-  const [isPortrait, setIsPortrait] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [isPortrait, setIsPortrait] = useState<boolean>(false);
 
   const resetForm = () => {
     setFields([]);
@@ -23,23 +24,21 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      Modal.setAppElement("#__next");
+    setMounted(true);
 
-      const handleOrientation = () => {
-        setIsPortrait(window.innerHeight > window.innerWidth);
-      };
+    const handleOrientation = () => {
+      setIsPortrait(window.innerHeight > window.innerWidth);
+    };
 
-      handleOrientation();
+    handleOrientation();
 
-      window.addEventListener("resize", handleOrientation);
-      window.addEventListener("orientationchange", handleOrientation);
+    window.addEventListener("resize", handleOrientation);
+    window.addEventListener("orientationchange", handleOrientation);
 
-      return () => {
-        window.removeEventListener("resize", handleOrientation);
-        window.removeEventListener("orientationchange", handleOrientation);
-      };
-    }
+    return () => {
+      window.removeEventListener("resize", handleOrientation);
+      window.removeEventListener("orientationchange", handleOrientation);
+    };
   }, []);
 
   return (
@@ -49,8 +48,8 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
       enableSystem
       disableTransitionOnChange
     >
-      <div id="__next">
-        {isPortrait ? (
+      <LanguageProvider>
+        {!mounted ? null : isPortrait ? (
           <RotateHint />
         ) : (
           <div className="flex h-screen">
@@ -63,9 +62,10 @@ export const LayoutClient: React.FC<{ children: React.ReactNode }> = ({
               setActiveCard={setActiveCard}
             />
             <RightPanel title={title} fields={fields} resetForm={resetForm} />
+            {children}
           </div>
         )}
-      </div>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };

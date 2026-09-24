@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -16,7 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/types/types";
+import { Field, FieldType } from "@/types/types";
+import { useTranslation } from "@/i18n/language-provider";
 
 interface FieldCardProps {
   field: Field;
@@ -24,166 +27,135 @@ interface FieldCardProps {
   onRemoveField: () => void;
 }
 
+const FIELD_TYPES: FieldType[] = [
+  "text",
+  "textarea",
+  "select",
+  "checkbox-group",
+  "switch",
+];
+
+const TYPE_LABEL_KEYS: Record<FieldType, string> = {
+  text: "fieldCard.types.text",
+  textarea: "fieldCard.types.textarea",
+  select: "fieldCard.types.select",
+  "checkbox-group": "fieldCard.types.checkboxGroup",
+  switch: "fieldCard.types.switch",
+};
+
 export const FieldCard: React.FC<FieldCardProps> = ({
   field,
   onUpdateField,
   onRemoveField,
 }) => {
+  const { t } = useTranslation();
+  const options = field.options ?? [];
+
+  const setOptions = (updatedOptions: string[]) =>
+    onUpdateField({ ...field, options: updatedOptions });
+
+  const hasOptions = field.type === "select" || field.type === "checkbox-group";
+  const optionPlaceholderKey =
+    field.type === "select"
+      ? "fieldCard.optionPlaceholder"
+      : "fieldCard.checkboxOptionPlaceholder";
+
   return (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle>Karta ustawień pola</CardTitle>
-        <CardDescription>Konfiguracja pola formularza</CardDescription>
+        <CardTitle>{t("fieldCard.title")}</CardTitle>
+        <CardDescription>{t("fieldCard.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium">Typ pola</label>
+          <label className="block mb-2 text-sm font-medium">
+            {t("fieldCard.typeLabel")}
+          </label>
           <Select
             value={field.type}
-            onValueChange={(value) => {
-              if (
-                [
-                  "text",
-                  "textarea",
-                  "select",
-                  "checkbox-group",
-                  "switch",
-                ].includes(value)
-              ) {
-                onUpdateField({ ...field, type: value });
-              }
-            }}
+            onValueChange={(value) =>
+              onUpdateField({ ...field, type: value as FieldType })
+            }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Wybierz typ" />
+              <SelectValue placeholder={t("fieldCard.typePlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="text">Tekst</SelectItem>
-              <SelectItem value="textarea">Pole tekstowe</SelectItem>
-              <SelectItem value="select">Lista rozwijana</SelectItem>
-              <SelectItem value="checkbox-group">Pola wyboru</SelectItem>
-              <SelectItem value="switch">Przełącznik</SelectItem>
+              {FIELD_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {t(TYPE_LABEL_KEYS[type])}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium">
-            Etykieta pola
+            {t("fieldCard.labelLabel")}
           </label>
           <Input
             value={field.label}
             onChange={(e) => onUpdateField({ ...field, label: e.target.value })}
-            placeholder="Wprowadź nazwę pola"
+            placeholder={t("fieldCard.labelPlaceholder")}
             className="w-full"
           />
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium">
-            Tekst zastępczy
+            {t("fieldCard.placeholderLabel")}
           </label>
           <Input
             value={field.placeholder}
             onChange={(e) =>
               onUpdateField({ ...field, placeholder: e.target.value })
             }
-            placeholder="Nazwa dla Placeholder"
+            placeholder={t("fieldCard.placeholderPlaceholder")}
             className="w-full"
-            disabled={
-              field.type === "checkbox-group" ||
-              field.type === "select" ||
-              field.type === "switch"
-            }
+            disabled={hasOptions}
           />
         </div>
 
-        {field.type === "checkbox-group" && (
+        {hasOptions && (
           <div className="mb-4">
-            {Array.isArray(field.placeholder) &&
-            field.placeholder.length > 0 ? (
-              field.placeholder.map((option, index) => (
-                <div key={index} className="flex mb-2">
-                  <Input
-                    value={option}
-                    onChange={(e) => {
-                      const updatedOptions = [...field.placeholder];
-                      updatedOptions[index] = e.target.value;
-                      onUpdateField({ ...field, placeholder: updatedOptions });
-                    }}
-                    placeholder={`Nazwa checkbox ${index + 1}`}
-                    className="w-full"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      const updatedOptions = [...field.placeholder];
-                      updatedOptions.splice(index, 1);
-                      onUpdateField({ ...field, placeholder: updatedOptions });
-                    }}
-                    className="ml-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md transition-colors"
-                  >
-                    Usuń
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <div className="mt-4">Dodaj kolejny checkbox</div>
+            {field.type === "select" && (
+              <label className="block mb-2 text-sm font-medium">
+                {t("fieldCard.selectOptionsLabel")}
+              </label>
             )}
-            <Button
-              type="button"
-              onClick={() => {
-                const updatedOptions = [...(field.placeholder || []), ""];
-                onUpdateField({ ...field, placeholder: updatedOptions });
-              }}
-              className="mt-4 mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm rounded-md transition-colors"
-            >
-              + Dodaj
-            </Button>
-          </div>
-        )}
-
-        {field.type === "select" && (
-          <div className="mb-4">
-            <label className="block mb-2 text-sm font-medium">
-              Opcje listy rozwijanej
-            </label>
-            {(field.options ?? []).map((option, index) => (
-              <div key={index} className="flex mb-2">
+            {field.type === "checkbox-group" && options.length === 0 && (
+              <div className="mt-4">{t("fieldCard.addAnotherCheckbox")}</div>
+            )}
+            {options.map((option, index) => (
+              <div key={index} className="flex mb-2 gap-2">
                 <Input
                   value={option}
                   onChange={(e) => {
-                    const updatedOptions = [...(field.options ?? [])];
+                    const updatedOptions = [...options];
                     updatedOptions[index] = e.target.value;
-                    onUpdateField({ ...field, options: updatedOptions });
+                    setOptions(updatedOptions);
                   }}
-                  placeholder={`Opcja ${index + 1}`}
+                  placeholder={`${t(optionPlaceholderKey)} ${index + 1}`}
                   className="w-full"
                 />
                 <Button
                   type="button"
-                  onClick={() => {
-                    const updatedOptions = [...(field.options ?? [])];
-                    updatedOptions.splice(index, 1);
-                    onUpdateField({ ...field, options: updatedOptions });
-                  }}
-                  className="ml-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md transition-colors"
+                  variant="destructive"
+                  onClick={() =>
+                    setOptions(options.filter((_, i) => i !== index))
+                  }
                 >
-                  Usuń
+                  {t("fieldCard.remove")}
                 </Button>
               </div>
             ))}
-
             <Button
               type="button"
-              onClick={() => {
-                const updatedOptions = [...(field.options || [])];
-                updatedOptions.push("");
-                onUpdateField({ ...field, options: updatedOptions });
-              }}
-              className="mt-4 mb-6 px-4 py-2 bg-teal-500 dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-700 text-white text-sm rounded-md transition-colors"
+              className="mt-4 mb-6"
+              onClick={() => setOptions([...options, ""])}
             >
-              + Dodaj
+              {t("fieldCard.add")}
             </Button>
           </div>
         )}
@@ -195,14 +167,13 @@ export const FieldCard: React.FC<FieldCardProps> = ({
               onUpdateField({ ...field, required: checked })
             }
           />
-          <label className="ml-2 text-sm font-medium">Wymagane</label>
+          <label className="ml-2 text-sm font-medium">
+            {t("fieldCard.required")}
+          </label>
         </div>
 
-        <Button
-          onClick={onRemoveField}
-          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-md transition-colors"
-        >
-          Usuń pole
+        <Button variant="destructive" onClick={onRemoveField}>
+          {t("fieldCard.removeField")}
         </Button>
       </CardContent>
     </Card>

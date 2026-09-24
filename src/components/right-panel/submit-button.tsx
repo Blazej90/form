@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +14,7 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { Field } from "@/types/types";
+import { useTranslation } from "@/i18n/language-provider";
 
 interface SubmitButtonProps {
   formData: { [key: string]: string | string[] | boolean };
@@ -26,35 +29,35 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
   onModalClose,
   onResetForm,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex justify-center mt-6">
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button
-            type="button"
-            className="px-4 py-2 bg-purple-600 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-800 text-white text-sm font-semibold rounded-md transition-colors"
-          >
-            Submit
-          </Button>
+          <Button type="button">{t("preview.submit")}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Dziękujemy!</AlertDialogTitle>
+            <AlertDialogTitle>{t("submitDialog.title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Twoje dane zostały przesłane pomyślnie.
+              {t("submitDialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="mt-2">
-            <p className="font-semibold">Dane z formularza:</p>
+            <p className="font-semibold">{t("submitDialog.formData")}</p>
             <ul className="mt-2 space-y-1 text-sm">
-              {Object.entries(formData).map(([key, value], index) => {
+              {Object.entries(formData).map(([key, value]) => {
+                if (key === "droppedFileName") return null;
+
                 const field = fields.find((f: Field) => f.id === key);
 
                 if (key === "droppedImage" && typeof value === "string") {
                   return (
-                    <li key={index}>
-                      <strong>Plik:</strong>
+                    <li key={key}>
+                      <strong>{t("submitDialog.file")}</strong>
                       <div className="flex items-center space-x-2 mt-1">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={value}
                           alt="Dropped file"
@@ -70,29 +73,29 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
 
                 if (field?.type === "checkbox-group") {
                   const selectedValues =
-                    Array.isArray(value) && field.placeholder
+                    Array.isArray(value) && field.options
                       ? value
                           .filter((selectedValue) =>
-                            field.placeholder.includes(selectedValue)
+                            field.options!.includes(selectedValue)
                           )
                           .join(", ")
                       : "";
 
                   return (
-                    <li key={index}>
+                    <li key={key}>
                       <strong>{field.label}:</strong>{" "}
-                      {selectedValues || "Brak wyboru"}
+                      {selectedValues || t("submitDialog.noSelection")}
                     </li>
                   );
                 }
 
                 return (
-                  <li key={index}>
+                  <li key={key}>
                     <strong>{field?.label || key}:</strong>{" "}
                     {typeof value === "boolean"
                       ? value
-                        ? "Tak"
-                        : "Nie"
+                        ? t("submitDialog.yes")
+                        : t("submitDialog.no")
                       : Array.isArray(value)
                         ? value.join(", ")
                         : value}
@@ -102,14 +105,14 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
             </ul>
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Anuluj</AlertDialogCancel>
+            <AlertDialogCancel>{t("submitDialog.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 onResetForm();
                 onModalClose();
               }}
             >
-              OK
+              {t("submitDialog.ok")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

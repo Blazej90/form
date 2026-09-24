@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Field } from "@/types/types";
 import { Input } from "@/components/ui/input";
@@ -11,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslation } from "@/i18n/language-provider";
 
 interface FieldRendererProps {
   field: Field;
@@ -23,6 +26,8 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
   onChange,
   value,
 }) => {
+  const { t } = useTranslation();
+
   if (!field.id) {
     console.error("Rendering field with ID: undefined");
     return null;
@@ -39,11 +44,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
         <Input
           type="text"
           value={typeof value === "string" ? value : ""}
-          placeholder={
-            Array.isArray(field.placeholder)
-              ? field.placeholder[0]
-              : field.placeholder
-          }
+          placeholder={field.placeholder}
           className="w-full"
           onChange={(e) => onChange(field.id, e.target.value)}
         />
@@ -52,11 +53,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       {field.type === "textarea" && (
         <Textarea
           value={typeof value === "string" ? value : ""}
-          placeholder={
-            Array.isArray(field.placeholder)
-              ? field.placeholder[0]
-              : field.placeholder
-          }
+          placeholder={field.placeholder}
           className="w-full"
           onChange={(e) => onChange(field.id, e.target.value)}
         />
@@ -68,7 +65,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
           onValueChange={(val) => onChange(field.id, val)}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Wybierz opcję" />
+            <SelectValue placeholder={t("preview.selectPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
             {(field.options ?? [])
@@ -84,32 +81,31 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
 
       {field.type === "checkbox-group" && (
         <div className="flex flex-wrap gap-2 mt-2">
-          {Array.isArray(field.placeholder) &&
-            field.placeholder.map((label, index) => {
-              const isChecked = Array.isArray(value) && value.includes(label);
-              return (
-                <div key={index} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`${field.id}-${index}`}
-                    checked={isChecked}
-                    onCheckedChange={(checked) => {
-                      const updatedValues = Array.isArray(value)
-                        ? checked
-                          ? [...value, label]
-                          : value.filter((val: string) => val !== label)
-                        : checked
-                          ? [label]
-                          : [];
+          {(field.options ?? []).map((label, index) => {
+            const isChecked = Array.isArray(value) && value.includes(label);
+            return (
+              <div key={index} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`${field.id}-${index}`}
+                  checked={isChecked}
+                  onCheckedChange={(checked) => {
+                    const updatedValues = Array.isArray(value)
+                      ? checked
+                        ? [...value, label]
+                        : value.filter((val: string) => val !== label)
+                      : checked
+                        ? [label]
+                        : [];
 
-                      onChange(field.id, updatedValues);
-                    }}
-                  />
-                  <label htmlFor={`${field.id}-${index}`} className="text-sm">
-                    {label}
-                  </label>
-                </div>
-              );
-            })}
+                    onChange(field.id, updatedValues);
+                  }}
+                />
+                <label htmlFor={`${field.id}-${index}`} className="text-sm">
+                  {label}
+                </label>
+              </div>
+            );
+          })}
         </div>
       )}
 
