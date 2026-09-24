@@ -3,16 +3,19 @@
 import React from "react";
 import { Field } from "@/types/types";
 import { FieldRenderer } from "./field-renderer";
+import { ValidationErrorKey } from "@/lib/validation";
 
 interface RightFieldListProps {
   fields: Field[];
   formData: { [key: string]: string | boolean | string[] };
+  errors: Record<string, ValidationErrorKey>;
   onChange: (id: string, value: string | boolean | string[]) => void;
 }
 
 export const RightFieldList: React.FC<RightFieldListProps> = ({
   fields,
   formData,
+  errors,
   onChange,
 }) => {
   return (
@@ -23,6 +26,7 @@ export const RightFieldList: React.FC<RightFieldListProps> = ({
           field={field}
           onChange={onChange}
           value={formData[field.id] || ""}
+          error={errors[field.id]}
         />
       ))}
     </div>

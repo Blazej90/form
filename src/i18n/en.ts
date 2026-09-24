@@ -33,6 +33,10 @@ export const en = {
     selectPlaceholder: "Select an option",
     submit: "Submit",
   },
+  validation: {
+    required: "This field is required",
+    requiredSwitch: "This switch must be turned on",
+  },
   submitDialog: {
     title: "Thank you!",
     description: "Your data has been submitted successfully.",

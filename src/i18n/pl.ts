@@ -35,6 +35,10 @@ export const pl: Translations = {
     selectPlaceholder: "Wybierz opcję",
     submit: "Wyślij",
   },
+  validation: {
+    required: "To pole jest wymagane",
+    requiredSwitch: "Ten przełącznik musi być włączony",
+  },
   submitDialog: {
     title: "Dziękujemy!",
     description: "Twoje dane zostały przesłane pomyślnie.",

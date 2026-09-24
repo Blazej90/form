@@ -4,7 +4,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogFooter,
@@ -19,24 +18,28 @@ import { useTranslation } from "@/i18n/language-provider";
 interface SubmitButtonProps {
   formData: { [key: string]: string | string[] | boolean };
   fields: Field[];
-  onModalClose: () => void;
-  onResetForm: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: () => void;
+  onConfirm: () => void;
 }
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({
   formData,
   fields,
-  onModalClose,
-  onResetForm,
+  open,
+  onOpenChange,
+  onSubmit,
+  onConfirm,
 }) => {
   const { t } = useTranslation();
 
   return (
     <div className="flex justify-center mt-6">
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button type="button">{t("preview.submit")}</Button>
-        </AlertDialogTrigger>
+      <Button type="button" onClick={onSubmit}>
+        {t("preview.submit")}
+      </Button>
+      <AlertDialog open={open} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("submitDialog.title")}</AlertDialogTitle>
@@ -106,12 +109,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("submitDialog.cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                onResetForm();
-                onModalClose();
-              }}
-            >
+            <AlertDialogAction onClick={onConfirm}>
               {t("submitDialog.ok")}
             </AlertDialogAction>
           </AlertDialogFooter>

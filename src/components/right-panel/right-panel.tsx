@@ -7,6 +7,7 @@ import { FormTitle } from "./form-title";
 import { RightFieldList } from "./right-field-list";
 import { SubmitButton } from "./submit-button";
 import { DropZoneComponent } from "./drop-zone";
+import { validateFields, ValidationErrorKey } from "@/lib/validation";
 
 interface RightPanelProps {
   title: string;
@@ -22,15 +23,33 @@ export const RightPanel: React.FC<RightPanelProps> = ({
   const [formData, setFormData] = useState<{
     [key: string]: string | boolean | string[];
   }>({});
+  const [errors, setErrors] = useState<Record<string, ValidationErrorKey>>({});
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(0);
 
   const handleChange = (id: string, value: string | boolean | string[]) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
+    setErrors((prev) => {
+      if (!(id in prev)) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  };
+
+  const handleSubmit = () => {
+    const validationErrors = validateFields(fields, formData);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      setDialogOpen(true);
+    }
   };
 
   const handleReset = () => {
     resetForm();
     setFormData({});
+    setErrors({});
+    setDialogOpen(false);
     setResetTrigger((prev) => prev + 1);
   };
 
@@ -45,6 +64,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
             <RightFieldList
               fields={fields}
               formData={formData}
+              errors={errors}
               onChange={handleChange}
             />
             <DropZoneComponent
@@ -60,8 +80,10 @@ export const RightPanel: React.FC<RightPanelProps> = ({
             <SubmitButton
               formData={formData}
               fields={fields}
-              onModalClose={handleReset}
-              onResetForm={handleReset}
+              open={dialogOpen}
+              onOpenChange={setDialogOpen}
+              onSubmit={handleSubmit}
+              onConfirm={handleReset}
             />
           </form>
         </CardContent>

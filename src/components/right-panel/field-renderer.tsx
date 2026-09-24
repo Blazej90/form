@@ -14,17 +14,20 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "@/i18n/language-provider";
+import { ValidationErrorKey } from "@/lib/validation";
 
 interface FieldRendererProps {
   field: Field;
   onChange: (id: string, value: string | boolean | string[]) => void;
   value: string | boolean | string[];
+  error?: ValidationErrorKey;
 }
 
 export const FieldRenderer: React.FC<FieldRendererProps> = ({
   field,
   onChange,
   value,
+  error,
 }) => {
   const { t } = useTranslation();
 
@@ -120,6 +123,10 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
             {field.placeholder || field.label}
           </label>
         </div>
+      )}
+
+      {error && (
+        <p className="mt-1 text-sm text-red-500">{t(`validation.${error}`)}</p>
       )}
     </div>
   );
