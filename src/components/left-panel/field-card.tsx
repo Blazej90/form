@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Field, FieldType } from "@/types/types";
+import { Field, FieldOption, FieldType } from "@/types/types";
 import { useTranslation } from "@/i18n/language-provider";
 
 interface FieldCardProps {
@@ -51,7 +51,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
   const { t } = useTranslation();
   const options = field.options ?? [];
 
-  const setOptions = (updatedOptions: string[]) =>
+  const setOptions = (updatedOptions: FieldOption[]) =>
     onUpdateField({ ...field, options: updatedOptions });
 
   const hasOptions = field.type === "select" || field.type === "checkbox-group";
@@ -128,14 +128,16 @@ export const FieldCard: React.FC<FieldCardProps> = ({
               <div className="mt-4">{t("fieldCard.addAnotherCheckbox")}</div>
             )}
             {options.map((option, index) => (
-              <div key={index} className="flex mb-2 gap-2">
+              <div key={option.id} className="flex mb-2 gap-2">
                 <Input
-                  value={option}
-                  onChange={(e) => {
-                    const updatedOptions = [...options];
-                    updatedOptions[index] = e.target.value;
-                    setOptions(updatedOptions);
-                  }}
+                  value={option.value}
+                  onChange={(e) =>
+                    setOptions(
+                      options.map((o) =>
+                        o.id === option.id ? { ...o, value: e.target.value } : o
+                      )
+                    )
+                  }
                   placeholder={`${t(optionPlaceholderKey)} ${index + 1}`}
                   className="w-full"
                 />
@@ -143,7 +145,7 @@ export const FieldCard: React.FC<FieldCardProps> = ({
                   type="button"
                   variant="destructive"
                   onClick={() =>
-                    setOptions(options.filter((_, i) => i !== index))
+                    setOptions(options.filter((o) => o.id !== option.id))
                   }
                 >
                   {t("fieldCard.remove")}
@@ -153,7 +155,9 @@ export const FieldCard: React.FC<FieldCardProps> = ({
             <Button
               type="button"
               className="mt-4 mb-6"
-              onClick={() => setOptions([...options, ""])}
+              onClick={() =>
+                setOptions([...options, { id: crypto.randomUUID(), value: "" }])
+              }
             >
               {t("fieldCard.add")}
             </Button>

@@ -72,10 +72,10 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
           </SelectTrigger>
           <SelectContent>
             {(field.options ?? [])
-              .filter((option) => option.trim() !== "")
-              .map((option, index) => (
-                <SelectItem key={index} value={option}>
-                  {option}
+              .filter((option) => option.value.trim() !== "")
+              .map((option) => (
+                <SelectItem key={option.id} value={option.value}>
+                  {option.value}
                 </SelectItem>
               ))}
           </SelectContent>
@@ -84,27 +84,29 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
 
       {field.type === "checkbox-group" && (
         <div className="flex flex-wrap gap-2 mt-2">
-          {(field.options ?? []).map((label, index) => {
-            const isChecked = Array.isArray(value) && value.includes(label);
+          {(field.options ?? []).map((option) => {
+            const isChecked =
+              Array.isArray(value) && value.includes(option.value);
+            const checkboxId = `${field.id}-${option.id}`;
             return (
-              <div key={index} className="flex items-center space-x-2">
+              <div key={option.id} className="flex items-center space-x-2">
                 <Checkbox
-                  id={`${field.id}-${index}`}
+                  id={checkboxId}
                   checked={isChecked}
                   onCheckedChange={(checked) => {
                     const updatedValues = Array.isArray(value)
                       ? checked
-                        ? [...value, label]
-                        : value.filter((val: string) => val !== label)
+                        ? [...value, option.value]
+                        : value.filter((val: string) => val !== option.value)
                       : checked
-                        ? [label]
+                        ? [option.value]
                         : [];
 
                     onChange(field.id, updatedValues);
                   }}
                 />
-                <label htmlFor={`${field.id}-${index}`} className="text-sm">
-                  {label}
+                <label htmlFor={checkboxId} className="text-sm">
+                  {option.value}
                 </label>
               </div>
             );

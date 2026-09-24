@@ -79,7 +79,9 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
                     Array.isArray(value) && field.options
                       ? value
                           .filter((selectedValue) =>
-                            field.options!.includes(selectedValue)
+                            field.options!.some(
+                              (option) => option.value === selectedValue
+                            )
                           )
                           .join(", ")
                       : "";
