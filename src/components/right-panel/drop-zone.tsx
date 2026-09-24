@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { IconGallery } from "justd-icons";
+import { ImageUp } from "lucide-react";
 import { useTranslation } from "@/i18n/language-provider";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -62,7 +62,7 @@ export function DropZoneComponent({ resetTrigger, onFileDrop }: DropZoneProps) {
         ) : (
           <div className="grid space-y-3 text-center">
             <div className="mx-auto grid h-12 w-12 place-content-center rounded-full border bg-secondary/70">
-              <IconGallery className="h-5 w-5" />
+              <ImageUp className="h-5 w-5" />
             </div>
             <p>{t("dropZone.upload")}</p>
             <p className="text-sm text-gray-500">{t("dropZone.hint")}</p>
