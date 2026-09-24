@@ -1,14 +1,16 @@
+"use client";
+
 import React from "react";
 import { Field } from "@/types/types";
 import { FieldRenderer } from "./field-renderer";
 
-interface FieldListProps {
+interface RightFieldListProps {
   fields: Field[];
   formData: { [key: string]: string | boolean | string[] };
   onChange: (id: string, value: string | boolean | string[]) => void;
 }
 
-export const FieldList: React.FC<FieldListProps> = ({
+export const RightFieldList: React.FC<RightFieldListProps> = ({
   fields,
   formData,
   onChange,

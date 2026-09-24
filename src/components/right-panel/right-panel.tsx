@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Field } from "@/types/types";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { FormTitle } from "./form-title";
-import { FieldList } from "./right-field-list";
+import { RightFieldList } from "./right-field-list";
 import { SubmitButton } from "./submit-button";
 import { DropZoneComponent } from "./drop-zone";
 
@@ -42,7 +42,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({
         </CardHeader>
         <CardContent>
           <form>
-            <FieldList
+            <RightFieldList
               fields={fields}
               formData={formData}
               onChange={handleChange}

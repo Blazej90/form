@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LeftPanelHeader } from "./left-panel-header";
-import { FieldList } from "./left-field-list";
+import { LeftFieldList } from "./left-field-list";
 import { Field } from "@/types/types";
 
 interface LeftPanelProps {
@@ -23,22 +23,15 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
   activeCard,
   setActiveCard,
 }) => {
-  const [cards, setCards] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (cards.length === 0) {
-      addCard();
-    }
-  }, []);
+  const didInit = useRef(false);
 
   const addCard = () => {
-    const newCardId = Date.now().toString();
-    setCards((prevCards) => [...prevCards, newCardId]);
-    setActiveCard(newCardId);
+    const newFieldId = crypto.randomUUID();
+    setActiveCard(newFieldId);
     setFields((prevFields) => [
       ...prevFields,
       {
-        id: newCardId,
+        id: newFieldId,
         type: "text",
         label: "",
         placeholder: "",
@@ -47,8 +40,13 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     ]);
   };
 
+  useEffect(() => {
+    if (didInit.current) return;
+    didInit.current = true;
+    if (fields.length === 0) addCard();
+  }, []);
+
   const removeCard = (cardId: string) => {
-    setCards((prevCards) => prevCards.filter((id) => id !== cardId));
     setFields((prevFields) =>
       prevFields.filter((field) => field.id !== cardId)
     );
@@ -65,7 +63,7 @@ export const LeftPanel: React.FC<LeftPanelProps> = ({
     <div className="w-1/2 p-6 border-r border-gray-300 dark:border-gray-700">
       <LeftPanelHeader title={title} setTitle={setTitle} onAddCard={addCard} />
       <ScrollArea className="max-h-[80vh] overflow-y-auto">
-        <FieldList
+        <LeftFieldList
           fields={fields}
           onUpdateField={updateField}
           onRemoveField={removeCard}

@@ -1,8 +1,15 @@
+export type FieldType =
+  | "text"
+  | "textarea"
+  | "select"
+  | "checkbox-group"
+  | "switch";
+
 export interface Field {
   id: string;
-  type: string;
+  type: FieldType;
   label: string;
-  placeholder: string | string[];
+  placeholder: string;
   required: boolean;
   options?: string[];
   selectedValues?: string[];
