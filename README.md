@@ -75,7 +75,7 @@ pnpm test    # Run unit tests (Vitest)
 ```
 src/
 ├── app/                     # Next.js App Router
-│   ├── layout.tsx           # Root layout (Geist fonts, wraps the app)
+│   ├── layout.tsx           # Root layout (Space Grotesk / JetBrains Mono fonts)
 │   ├── page.tsx             # Entry point (app renders from LayoutClient)
 │   └── globals.css          # Tailwind + CSS variables
 ├── components/

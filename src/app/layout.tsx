@@ -1,9 +1,9 @@
 import React from "react";
-import { Manrope, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { LayoutClient } from "@/components/layout-client";
 import "./globals.css";
 
-const manrope = Manrope({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
   subsets: ["latin", "latin-ext"],
 });
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pl" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased tracking-tight`}
       >
         <LayoutClient>{children}</LayoutClient>
       </body>
