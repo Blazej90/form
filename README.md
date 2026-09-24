@@ -14,13 +14,14 @@ Form Builder is a fully client-side, single-page application that lets you compo
   - Options list (for selects and checkbox groups)
   - "Required" toggle
   - Field deletion
-- **Right panel – Live preview:** renders the form exactly as configured, in real time. Includes an image drop zone (PNG/JPG upload with preview) and a submit button that opens a summary dialog with all entered data.
+- **Right panel – Live preview:** renders the form exactly as configured, in real time. Includes an image drop zone (PNG/JPG upload with preview) and a submit button that **validates required fields** (with inline error messages) before opening a summary dialog with all entered data.
 
 ### Additional features
 
 - **PL / EN internationalization** via a lightweight custom `LanguageProvider` (React Context), persisted in `localStorage`
 - **Dark / light mode** toggle powered by `next-themes`
 - **Responsive guard:** on portrait-oriented screens, the app shows an animated "rotate your screen" hint instead of the builder
+- **Required field validation** on submit — empty text/select fields, unchecked checkbox groups and off switches are flagged with translated inline errors
 - **In-memory state only** — no backend, no persistence; submitted data is displayed in a dialog and the form resets
 
 ## Tech Stack
@@ -30,12 +31,13 @@ Form Builder is a fully client-side, single-page application that lets you compo
 | Framework | [Next.js 15](https://nextjs.org/) (App Router, Turbopack) |
 | Library | [React 19](https://react.dev/) |
 | Language | TypeScript 5 |
-| Styling | [Tailwind CSS 3](https://tailwindcss.com/), tailwindcss-animate, tailwind-merge, tailwind-variants, class-variance-authority, clsx |
-| UI components | [shadcn/ui](https://ui.shadcn.com/) (new-york style) on [Radix UI](https://www.radix-ui.com/) primitives, react-aria-components |
-| Icons | lucide-react, justd-icons |
+| Styling | [Tailwind CSS 3](https://tailwindcss.com/), tailwindcss-animate, tailwind-merge, class-variance-authority, clsx |
+| UI components | [shadcn/ui](https://ui.shadcn.com/) (new-york style) on [Radix UI](https://www.radix-ui.com/) primitives |
+| Icons | lucide-react |
 | Animation | [framer-motion](https://motion.dev/) |
 | Theming | next-themes |
 | File upload | react-dropzone |
+| Testing | [Vitest](https://vitest.dev/) |
 | Linting & formatting | ESLint 9, Prettier 3 |
 
 ## Getting Started
@@ -97,9 +99,11 @@ src/
 │   ├── en.ts                # English translations (source of truth for keys)
 │   └── pl.ts                # Polish translations
 ├── lib/
-│   └── utils.ts             # cn() helper (clsx + tailwind-merge)
+│   ├── utils.ts             # cn() helper (clsx + tailwind-merge)
+│   ├── validation.ts        # Required-field validation (validateFields)
+│   └── validation.test.ts   # Validation unit tests
 └── types/
-    └── types.ts             # Field interface and FieldType union
+    └── types.ts             # Field, FieldOption and FieldType types
 ```
 
 ## Data Model
