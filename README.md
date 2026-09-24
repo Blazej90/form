@@ -108,14 +108,18 @@ All fields are described by a single interface:
 ```ts
 type FieldType = "text" | "textarea" | "select" | "checkbox-group" | "switch";
 
+interface FieldOption {
+  id: string;
+  value: string;
+}
+
 interface Field {
   id: string;
   type: FieldType;
   label: string;
   placeholder: string;
   required: boolean;
-  options?: string[];
-  selectedValues?: string[];
+  options?: FieldOption[];
 }
 ```
 

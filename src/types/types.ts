@@ -17,5 +17,4 @@ export interface Field {
   placeholder: string;
   required: boolean;
   options?: FieldOption[];
-  selectedValues?: string[];
 }
